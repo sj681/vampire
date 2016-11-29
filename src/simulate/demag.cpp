@@ -76,7 +76,7 @@
 #include "micromagnetic.hpp"
 
 #include <complex>
-#include "array3d.h"
+//#include "array3d.h"
 
 #include <cmath>
 #include <iostream>
@@ -99,7 +99,7 @@ namespace demag{
 	std::vector <std::vector < double > > rij_yy;
 	std::vector <std::vector < double > > rij_yz;
 	std::vector <std::vector < double > > rij_zz;
-
+/*
 	Array3D<fftw_complex> Nxx; // creates the stencil complex array Nxx
 	Array3D<fftw_complex> Nyx; // creates the stencil complex array Nyx
 	Array3D<fftw_complex> Nzx; // creates the stencil complex array Nzx
@@ -111,7 +111,7 @@ namespace demag{
 	Array3D<fftw_complex> Nxz; // creates the stencil complex array Nxz
 	Array3D<fftw_complex> Nyz; // creates the stencil complex array Nyz
 	Array3D<fftw_complex> Nzz; // creates the stencil complex array Nzz
-
+*/
 	int num_macro_cells_x;
 	int num_macro_cells_y;
 	int num_macro_cells_z;
@@ -224,7 +224,7 @@ void init(){
 		zlog << zTs() << "Precalculation of rij matrix for demag calculation complete. Time taken: " << t2-t1 << "s."<< std::endl;
 
 	}
-	if(demag::fft==true) {
+	/*if(demag::fft==true) {
 
 		Array3D<fftw_complex> Nxx; //3D Array for dipolar field
 		Array3D<fftw_complex> Nxy;
@@ -297,7 +297,7 @@ void init(){
 	         }
 	      }
 	   }
-	}
+	}*/
 
 	// timing function
    #ifdef MPICF
@@ -492,7 +492,7 @@ inline void std_update(){
 	//err::vexit();
 }
 
-
+/*
 void fft_update()
 {
 
@@ -638,7 +638,7 @@ double pi = 3.14;
 			}
 		}
 	}
-}
+}*/
 
 /// @brief Wrapper Function to update demag fields
 ///
@@ -679,7 +679,7 @@ void update(){
 
 		// recalculate demag fields
 		if(demag::fast==true) fast_update();
-		else if(demag::fft==true) fft_update();
+	//	else if(demag::fft==true) fft_update();
 		else std_update();
 
 		// For MPI version, only add local atoms

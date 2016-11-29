@@ -5,15 +5,38 @@
 #---------------------------------------------------
 # Number of Materials
 #---------------------------------------------------
-material:num-materials=1
+material:num-materials=2
 #---------------------------------------------------
 # Material 1 Cobalt Generic
 #---------------------------------------------------
 material[1]:material-name=Co
-material[1]:damping-constant=1.0
-material[1]:exchange-matrix[1]=11.2e-21
+material[1]:damping-constant=0.1
+material[1]:exchange-matrix[2]=4.2e-21
+material[1]:exchange-matrix[1]=4.2e-21
 material[1]:atomic-spin-moment=1.72 !muB
-material[1]:uniaxial-anisotropy-constant=1.0e-24
+material[1]:uniaxial-anisotropy-constant=5e-23
 material[1]:material-element=Ag
 material[1]:minimum-height=0.0
-material[1]:maximum-height=1.0
+material[1]:maximum-height=0.5
+material[1]:discretisation=micromagnetic
+material[1]:initial-spin-direction=random
+material[1]:micromagnetic-ms= 1e6
+material[1]:micromagnetic-ku= 1e5
+material[1]:micromagnetic-Tc=700
+
+material[2]:material-name=Co
+material[2]:damping-constant=0.1
+material[2]:exchange-matrix[2]=4.2e-21
+material[2]:exchange-matrix[1]=4.2e-21
+material[2]:atomic-spin-moment=1.72 !muB
+material[2]:uniaxial-anisotropy-constant=5e-24
+material[2]:material-element=Ag
+material[2]:minimum-height=0.5
+material[2]:maximum-height=1.0
+material[2]:discretisation=micromagnetic
+material[2]:initial-spin-direction=random
+material[2]:micromagnetic-ms= 1e6
+material[2]:micromagnetic-ku= 1e5
+material[2]:micromagnetic-exchange-matrix[1]=1.5e-20
+material[2]:micromagnetic-exchange-matrix[2]=1.5e-20
+material[2]:micromagnetic-Tc = 900

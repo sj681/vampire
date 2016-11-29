@@ -1,4 +1,4 @@
-#------------------------------------------
+	#------------------------------------------
 # Sample vampire input file to perform
 # benchmark calculation for v4.0
 #
@@ -13,27 +13,37 @@ create:crystal-structure=sc
 # System Dimensions:
 #------------------------------------------
 dimensions:unit-cell-size = 3.54 !A
-dimensions:system-size-x = 7.7 !nm
-dimensions:system-size-y = 7.7 !nm
-dimensions:system-size-z = 7.7 !nm
-
+dimensions:system-size-x = 10 !nm
+dimensions:system-size-y = 10 !nm
+dimensions:system-size-z = 10 !nm
+dimensions:macro-cell-size-x = 2.501 !nm
+dimensions:macro-cell-size-y = 2.501 !nm
+dimensions:macro-cell-size-z = 2.501 !nm
 #------------------------------------------
 # Material Files:
 #------------------------------------------
 material:file=Co.mat
-
 #------------------------------------------
 # Simulation attributes:
 #------------------------------------------
-sim:temperature=300.0
-sim:time-steps-increment=10
-sim:total-time-steps=10000
-sim:time-step=1.0E-15
-
+sim:total-time-steps=100000
+sim:time-step=1.0E-14
+sim:enable-micromagnetic-variables
+sim:time-steps-increment=1000
+sim:cooling-time =1 !ns
+sim:maximum-temperature=1000
+sim:minimum-temperature=0
+sim:temperature = 100
+sim:cooling-function=linear
+#sim:enable-dipole-fields
+#sim:enable-fast-dipole-fields
+#sim:dipole-field-update-rate = 1000
+#sim:llb-stochastic-fields-off
+#sim:enable-micromagnetic-boltzman-distribution
 #------------------------------------------
 # Program and integrator details
 #------------------------------------------
-sim:program=benchmark
+sim:program=field-cool
 sim:integrator=llg-heun
 
 #------------------------------------------
@@ -41,9 +51,9 @@ sim:integrator=llg-heun
 #------------------------------------------
 output:real-time
 output:temperature
-output:magnetisation
-output:magnetisation-length
-output:output-rate = 1000
+output:applied-field-strength
+output:material-magnetisation
+#output:magnetisation-length
 
-screen:time-steps
-screen:magnetisation-length
+#screen:time-steps
+#screen:temperature
