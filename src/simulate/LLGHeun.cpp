@@ -178,7 +178,6 @@ int LLG_Heun(){
 		x_initial_spin_array[atom] = atoms::x_spin_array[atom];
 		y_initial_spin_array[atom] = atoms::y_spin_array[atom];
 		z_initial_spin_array[atom] = atoms::z_spin_array[atom];
-			std::cout << atoms::x_spin_array[atom] << "\t" << atoms::y_spin_array[atom] << "\t" << atoms::z_spin_array[atom] <<std::endl;
 	}
 
 

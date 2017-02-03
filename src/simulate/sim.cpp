@@ -560,8 +560,7 @@ void integrate_serial(int n_steps){
          for(int ti=0;ti<n_steps;ti++){
             // Optionally select GPU accelerated version
             if(gpu::acceleration) gpu::llg_heun();
-				else if (micromagnetic::discretisation_micromagnetic) micromagnetic::LLB(n_steps,cells::num_cells, sim::temperature, cells::x_mag_array, cells::y_mag_array, cells::z_mag_array, sim::H_vec[0],sim::H_vec[1],sim::H_vec[2], sim::H_applied, mp::dt, cells::volume_array, N);
-
+				if(micromagnetic::discretisation_micromagnetic)	micromagnetic::LLB(n_steps,cells::num_cells, sim::temperature, cells::x_mag_array, cells::y_mag_array, cells::z_mag_array, sim::H_vec[0],sim::H_vec[1],sim::H_vec[2], sim::H_applied, mp::dt, cells::volume_array, N);
             // Otherwise use CPU version
             else sim::LLG_Heun();
             // Increment time
@@ -600,7 +599,20 @@ void integrate_serial(int n_steps){
 				increment_time();
 			}
 			break;
-
+		case 5: // Hybrid Constrained Monte Carlo
+			for(int ti=0;ti<n_steps;ti++){
+				micromagnetic::LLG(n_steps,cells::num_cells, sim::temperature, cells::x_mag_array, cells::y_mag_array, cells::z_mag_array, sim::H_vec[0],sim::H_vec[1],sim::H_vec[2], sim::H_applied, mp::dt, cells::volume_array, N);
+				// increment time
+				increment_time();
+			}
+			break;
+		case 6: // Hybrid Constrained Monte Carlo
+			for(int ti=0;ti<n_steps;ti++){
+				micromagnetic::LLB(n_steps,cells::num_cells, sim::temperature, cells::x_mag_array, cells::y_mag_array, cells::z_mag_array, sim::H_vec[0],sim::H_vec[1],sim::H_vec[2], sim::H_applied, mp::dt, cells::volume_array, N);
+				// increment time
+				increment_time();
+			}
+			break;
 		default:{
 			std::cerr << "Unknown integrator type "<< sim::integrator << " requested, exiting" << std::endl;
          err::vexit();

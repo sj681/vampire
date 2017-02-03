@@ -61,7 +61,6 @@ int LLB_serial_heun( int num_steps,
 
 
 
-
    const double kB = 1.3806503e-23;
    //The external fields equal the length of the field times the applied field vector.
    //This is saved to an array.

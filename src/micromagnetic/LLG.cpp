@@ -60,7 +60,6 @@ int LLG_serial_heun( int num_steps,
                      int N
                   ){
 
-
    //The external fields equal the length of the field times the applied field vector.
    //This is saved to an array.
    mm::ext_field[0] = H*Hx;
