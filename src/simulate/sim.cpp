@@ -278,7 +278,7 @@ int run(){
    stats::update(atoms::x_spin_array, atoms::y_spin_array, atoms::z_spin_array, atoms::m_spin_array);
    // Initialize GPU acceleration if enabled
    if(gpu::acceleration) gpu::initialize();
-	if (micromagnetic::discretisation_micromagnetic) micromagnetic::initialize(cells::num_cells,stats::num_atoms, mp::num_materials,atoms::cell_array, atoms::neighbour_list_array,atoms::neighbour_list_start_index, atoms::neighbour_list_end_index,atoms::type_array, mp::material, atoms::x_coord_array,atoms::y_coord_array,atoms::z_coord_array,cs::unit_cell_size[0],cs::unit_cell_size[1],cs::unit_cell_size[2], cells::volume_array, sim::temperature, cells::num_atoms_in_unit_cell, cells::size, cs::system_dimensions[0],cs::system_dimensions[1],cs::system_dimensions[2] );
+	if (micromagnetic::discretisation_micromagnetic) micromagnetic::initialize(cells::num_cells,stats::num_atoms, mp::num_materials,atoms::cell_array, atoms::neighbour_list_array,atoms::neighbour_list_start_index, atoms::neighbour_list_end_index,atoms::type_array, mp::material, atoms::x_coord_array,atoms::y_coord_array,atoms::z_coord_array,cs::unit_cell_size[0],cs::unit_cell_size[1],cs::unit_cell_size[2], cells::volume_array, sim::temperature, cells::num_atoms_in_unit_cell, 5, cs::system_dimensions[0],cs::system_dimensions[1],cs::system_dimensions[2] );
 	// Select program to run
 	switch(sim::program){
 		case 0:

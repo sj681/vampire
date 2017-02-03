@@ -86,7 +86,6 @@ obj/micromagnetic/calculate_gamma.o \
 obj/micromagnetic/calculate_ku.o \
 obj/micromagnetic/calculate_ms.o \
 obj/micromagnetic/calculate_tc.o \
-obj/micromagnetic/fields.o \
 obj/micromagnetic/LLB.o \
 obj/mpi/LLGHeun-mpi.o \
 obj/mpi/LLGMidpoint-mpi.o \

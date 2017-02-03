@@ -61,7 +61,7 @@ namespace cells{
 	int num_cells=0;
 	int num_local_cells=0;
    int num_atoms_in_unit_cell=0;
-	double size=7.0; // Angstroms
+	std::vector <double> size(3,7.0); // Angstroms
 
 	bool initialised=false;
 
@@ -110,12 +110,12 @@ namespace cells{
 		cells::num_cells=0;
 		cells::num_local_cells=0;
 
-		zlog << zTs() << "Macrocell size = " << cells::size << " Angstroms" << std::endl;
+		zlog << zTs() << "Macrocell size = " << "\t"  << "x =" << cells::size[0] << '\t' << "y =" << cells::size[1] << "\t" << "z =" << cells::size[2]  << " Angstroms" << std::endl;
 
 		// determine number of cells in each direction (with small shift to prevent the fence post problem)
-		unsigned int ncellx = static_cast<unsigned int>(ceil((cs::system_dimensions[0]+0.01)/cells::size));
-		unsigned int ncelly = static_cast<unsigned int>(ceil((cs::system_dimensions[1]+0.01)/cells::size));
-		unsigned int ncellz = static_cast<unsigned int>(ceil((cs::system_dimensions[2]+0.01)/cells::size));
+		unsigned int ncellx = static_cast<unsigned int>(ceil((cs::system_dimensions[0]+0.01)/cells::size[0]));
+		unsigned int ncelly = static_cast<unsigned int>(ceil((cs::system_dimensions[1]+0.01)/cells::size[1]));
+		unsigned int ncellz = static_cast<unsigned int>(ceil((cs::system_dimensions[2]+0.01)/cells::size[2]));
 
 		//update total number of cells
 		cells::num_cells=ncellx*ncelly*ncellz;
@@ -168,7 +168,7 @@ namespace cells{
 			double c[3]={atoms::x_coord_array[atom]+atom_offset[0],atoms::y_coord_array[atom]+atom_offset[1],atoms::z_coord_array[atom]+atom_offset[2]};
 			int scc[3]={0,0,0}; // super cell coordinates
 			for(int i=0;i<3;i++){
-				scc[i]=int(c[i]/cells::size); // Always round down for supercell coordinates
+				scc[i]=int(c[i]/cells::size[i]); // Always round down for supercell coordinates
 				// Always check cell in range
 				if(scc[i]<0 || scc[i]>= d[i]){
 					terminaltextcolor(RED);

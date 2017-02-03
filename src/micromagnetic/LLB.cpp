@@ -132,7 +132,7 @@ if((sim::time +1)%vout::output_rate==0){
       atoms::z_spin_array[atom] = mm::z_array[cell];
    }
 
-
+}
    //calcualtes the average magnetisation of the system per step.
 /*
    double m_x = 0;
@@ -156,7 +156,6 @@ if((sim::time +1)%vout::output_rate==0){
 
    std::cout << sim::time << '\t' << temperature << '\t' << m_x << '\t' << m_y << '\t' << m_z  << "\t" << m_l <<std::endl;
 */
-}
    if (micromagnetic::enable_boltzman_distribution == true){
       if (sim::time > 1000){
          for (int cell = 0; cell < num_cells; cell ++)

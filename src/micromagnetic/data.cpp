@@ -44,6 +44,9 @@ namespace micromagnetic{
       // Shared variables inside micromagnetic module
       //------------------------------------------------------------------------
 
+      std::vector<double> m_e;
+      std::vector<double> alpha_para;
+      std::vector<double> alpha_perp;
       //holds the cell parameters
       std::vector<double> A;
       std::vector<double> alpha;

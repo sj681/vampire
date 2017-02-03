@@ -46,7 +46,7 @@ namespace micromagnetic{
        std::vector <double> volume_array,
        double Temperature,
        double num_atoms_in_unit_cell,
-       double size,
+       double a,
        double system_dimensions_x,
        double system_dimensions_y,
        double system_dimensions_z){
@@ -99,6 +99,10 @@ namespace micromagnetic{
       mm::mx_init.resize(num_cells,0.0);
       mm::my_init.resize(num_cells,0.0);
       mm::mz_init.resize(num_cells,0.0);
+
+      mm::m_e.resize(num_cells,0.0);
+      mm::alpha_para.resize(num_cells,0.0);
+      mm::alpha_perp.resize(num_cells,0.0);
 
       //Boltzman dist. variable resizing
       P.resize(101);

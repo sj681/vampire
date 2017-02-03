@@ -35,7 +35,6 @@
 /// @section License
 /// Use of this code, either in source or compiled form, is subject to license from the authors.
 /// Copyright \htmlonly &copy \endhtmlonly Richard Evans, 2009-2010. All Rights Reserved.
-///
 /// @section info File Information
 /// @author  Richard Evans, rfle500@york.ac.uk
 /// @version 1.0
@@ -1381,7 +1380,33 @@ int match_dimension(string const word, string const value, string const unit, in
    if(word==test){
       double cs=atof(value.c_str());
       check_for_valid_value(cs, word, line, prefix, unit, "length", 0.0, 1.0e7,"input","0.0 - 1.0 millimetre");
-      cells::size=cs;
+      cells::size[0]=cs;
+      cells::size[1]=cs;
+      cells::size[2]=cs;
+      return EXIT_SUCCESS;
+   }
+   //--------------------------------------------------------------------
+   test="macro-cell-size-x";
+   if(word==test){
+      double cs=atof(value.c_str());
+      check_for_valid_value(cs, word, line, prefix, unit, "length", 0.0, 1.0e7,"input","0.0 - 1.0 millimetre");
+      cells::size[0]=cs;
+      return EXIT_SUCCESS;
+   }
+   //--------------------------------------------------------------------
+   test="macro-cell-size-y";
+   if(word==test){
+      double cs=atof(value.c_str());
+      check_for_valid_value(cs, word, line, prefix, unit, "length", 0.0, 1.0e7,"input","0.0 - 1.0 millimetre");
+      cells::size[1]=cs;
+      return EXIT_SUCCESS;
+   }
+   //--------------------------------------------------------------------
+   test="macro-cell-size-z";
+   if(word==test){
+      double cs=atof(value.c_str());
+      check_for_valid_value(cs, word, line, prefix, unit, "length", 0.0, 1.0e7,"input","0.0 - 1.0 millimetre");
+      cells::size[2]=cs;
       return EXIT_SUCCESS;
    }
    //--------------------------------------------------------------------

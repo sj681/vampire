@@ -14,7 +14,7 @@ namespace micromagnetic
    namespace internal
    {
 
-      //---------------------------------------------------------------------------------
+      //---------------------------------------------------------------------------------------------------
       //
       //                       A = 1/4*sum((Jij) *(x_i - x_j)^2)
       //This calculates the interaction between neighbouring cells therefore only interactions where i and j
@@ -24,7 +24,7 @@ namespace micromagnetic
       //
       //      A = (1/2)*sum((Jij)(x_i - x_j)^2) * (V_cell/V_atomic) * (1/l_cell) * (1/Ms)
       //
-      //-----------------------------------------------------------------------------
+      //---------------------------------------------------------------------------------------
 
       std::vector< double > calculate_a(int num_atoms,
                                         int num_cells,

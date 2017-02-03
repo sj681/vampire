@@ -41,6 +41,9 @@ namespace micromagnetic{
       // Internal data type definitions
       //-------------------------------------------------------------------------
 
+      extern std::vector<double> m_e;
+      extern std::vector<double> alpha_perp;
+      extern std::vector<double> alpha_para;
       extern std::vector<double> A;
       extern std::vector<double> alpha;
       extern std::vector<double> chi_perp;
@@ -88,6 +91,9 @@ namespace micromagnetic{
       std::vector<double> calculate_ms(const int num_atoms, const int num_cells,std::vector<int> cell_array, const std::vector<int> type_array,  std::vector <mp::materials_t> material);
       std::vector<double> calculate_tc(int num_atoms, int num_cells, std::vector<int> cell_array, std::vector<int> neighbour_list_array, std::vector<int> neighbour_list_start_index,  std::vector<int> neighbour_list_end_index, const std::vector<int> type_array, std::vector <mp::materials_t> material);
       void step(int num_cells, double temperature, std::vector<double> x_array,std::vector<double> y_array,std::vector<double> z_array, std::vector<double> ext_field, double dt,std::vector<double>& new_x_array,std::vector<double>& new_y_array,std::vector<double>& new_z_array);
+      void stepLLG(int num_cells, double temperature, std::vector<double> x_array,std::vector<double> y_array,std::vector<double> z_array, std::vector<double> ext_field, double dt,std::vector<double>& new_x_array,std::vector<double>& new_y_array,std::vector<double>& new_z_array);
+
+      std::vector<double> calculate_fields(std::vector <double > m, bool LLG, double temperature, int num_cells, int cell, std::vector<double> x_array, std::vector<double> y_array, std::vector<double> z_array);
 
       extern std::ofstream file;
 
