@@ -44,9 +44,6 @@ namespace micromagnetic{
       // Shared variables inside micromagnetic module
       //------------------------------------------------------------------------
 
-      std::vector<double> m_e;
-      std::vector<double> alpha_para;
-      std::vector<double> alpha_perp;
       //holds the cell parameters
       std::vector<double> A;
       std::vector<double> alpha;
@@ -56,11 +53,18 @@ namespace micromagnetic{
       std::vector<double> ku;
       std::vector<double> ms;
       std::vector<double> Tc;
+      std::vector<double> m_e;
+      std::vector<double> alpha_para;
+      std::vector<double> alpha_perp;
 
       //holds the normalised magnetisation in x,y,z
       std::vector<double> x_array;
       std::vector<double> y_array;
       std::vector<double> z_array;
+
+      std::vector<double> mx_store;
+      std::vector<double> my_store;
+      std::vector<double> mz_store;
 
       //external field vector
       std::vector<double> ext_field;
@@ -73,11 +77,6 @@ namespace micromagnetic{
       std::vector<double> x_heun_array;
       std::vector<double> y_heun_array;
       std::vector<double> z_heun_array;
-
-      //where the magnetisation is stored between euler and heun array steps
-      std::vector<double> mx_store;
-      std::vector<double> my_store;
-      std::vector<double> mz_store;
 
       //initial magnetisation vectors per step
       std::vector<double> mx_init;

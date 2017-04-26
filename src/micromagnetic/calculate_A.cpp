@@ -14,6 +14,11 @@ namespace micromagnetic
    namespace internal
    {
 
+
+     //function to calulate the intercell exchange.
+     //Each cell has an exchange interaction with every other cell in the system.
+     //This is calculated as a sum over all the atoms on the surface of the cells and there interaction with atoms in the other cell.
+
       //---------------------------------------------------------------------------------------------------
       //
       //                       A = 1/4*sum((Jij) *(x_i - x_j)^2)
@@ -29,25 +34,25 @@ namespace micromagnetic
       std::vector< double > calculate_a(int num_atoms,
                                         int num_cells,
                                         int num_materials,
-                                        std::vector<int> cell_array,
-                                        std::vector<int> neighbour_list_array,
-                                        std::vector<int> neighbour_list_start_index,
-                                        std::vector<int> neighbour_list_end_index,
-                                        const std::vector<int> type_array,
-                                        std::vector <mp::materials_t> material,
+                                        std::vector<int> cell_array,                      //1D array storing which cell each atom is in
+                                        std::vector<int> neighbour_list_array,            //1D vector listing the nearest neighbours of each atom
+                                        std::vector<int> neighbour_list_start_index,      //1D vector storing the start index for each atom in the neighbour_list_array
+                                        std::vector<int> neighbour_list_end_index,        //1D vector storing the end index for each atom in the neighbour_list_array
+                                        const std::vector<int> type_array,                //1D array storing which material each cell is
+                                        std::vector <mp::materials_t> material,           //class of material parameters for the atoms
                                         double unit_cell_size,
-                                        std::vector <double> volume_array,
+                                        std::vector <double> volume_array,                 //1D array storing the volume of each cell
                                         std::vector <double> x_coord_array,
                                         std::vector <double> y_coord_array,
                                         std::vector <double> z_coord_array,
                                         double num_atoms_in_unit_cell){
 
-         //initialising a vector to store the 2D data
-         std::vector< std::vector< double> > a2d;
+
+         std::vector< std::vector< double> > a2d;                       //stores the 2D exchange constants.
          a2d.resize(num_cells, std::vector<double>(num_cells,0.0));
 
-         //1D data storage for A
-         std::vector<double> a;
+
+         std::vector<double> a;                                         //1D vector to store the 2D vector odf the exchange intereactions
          a.resize(num_cells*num_cells,0.0);
 
          //calculates the atomic volume  = volume of one cell/number of atoms in a unitcell = atomic volume
@@ -78,22 +83,23 @@ namespace micromagnetic
 
          // loops over all cells to turn the 2D array into a 1D array
          // multiplys A by cell size/2Ms*V_Atomic to ad din the terms of H_Ex
+         //removes all the zero interactions by using neighbourlists.
+         //The neighbourlists store every interaction as a list. The section of list relevent to each cell is pointed out using the start index and end index.
          int array_index = 0;
          for (int i =0; i < num_cells; i++){
             double cell_size = pow(volume_array[i],1./3.);
-            macro_neighbour_list_start_index[i] = array_index;
+            macro_neighbour_list_start_index[i] = array_index;                                    //the start index
             for (int j =0; j <num_cells; j++){
-            //   std::cout << num_neighbours << '\t' << a2d[i][j] <<std::endl;
                if (a2d[i][j] != 0){
-                  macro_neighbour_list_array.push_back(j);
-                  a[array_index] = (a2d[i][j]*cell_size)/(2*ms[i]*atomic_volume);
-                  macro_neighbour_list_end_index[i] = array_index;
+                  macro_neighbour_list_array.push_back(j);                                        //if the interaction is non zero add the cell to the neighbourlist
+                  a[array_index] = (a2d[i][j]*cell_size)/(2*ms[i]*atomic_volume);                 //calcualtes the exchange interaction for the cells.
+                  macro_neighbour_list_end_index[i] = array_index;                                //the end index is updated for each cell so is given the value for the last cell.
                   array_index ++;
                }
             }
 
          }
-         return a;
+         return a;        //returns a 1D vector of the cellular exchange interactions,
       }
    }
 }

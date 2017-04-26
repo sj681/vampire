@@ -55,10 +55,9 @@ namespace micromagnetic{
          test="micromagnetic";
          if(value==test){
             discretisation_micromagnetic = true;
-            // call micromagnetic function?? somehow? create a bool - micromagnetic ==true? but where is the bool stpred?
             return true;
          }
-         test="atomistic"; // runs simualtion as normal - do i need to type anything to make it so that?
+         test="atomistic"; // runs simualtion as normal (atomistics)
          if(value==test){
             discretisation_micromagnetic= false;
             return true;

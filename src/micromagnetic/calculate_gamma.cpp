@@ -6,23 +6,23 @@
 #include "internal.hpp"
 #include "material.hpp"
 
-namespace micromagnetic
-{
+namespace micromagnetic{
 
-   namespace internal
-   {
+   namespace internal{
+
+      //calcualtes gyromagnetic ratio (gamma) for each cell from the individual atom properties.
       //gamma = sum(gamma)/N for each cell
+
       std::vector<double> calculate_gamma(int num_atoms,
                                           int num_cells,
-                                          std::vector<int> cell_array,
-                                          const std::vector<int> type_array,
-                                          std::vector <mp::materials_t> material)
-      {
+                                          std::vector<int> cell_array,                  //1D array storing which cell each atom is in
+                                          const std::vector<int> type_array,            //1D array storing which material each atom is
+                                          std::vector <mp::materials_t> material){      //class of material parameters for the atoms
 
 
 
-         std::vector<double>  gamma(num_cells,0.0);
-         std::vector<double>  N(num_cells,0.0);
+         std::vector<double>  gamma(num_cells,0.0);     //1D vector storing the value of gamma for each cell
+         std::vector<double>  N(num_cells,0.0);         //
 
          //gamma = 1/N sum_(i = N) gamma
          for (int atom = 0; atom <num_atoms; atom++){
@@ -34,7 +34,7 @@ namespace micromagnetic
          for (int cell = 0; cell < num_cells; cell++){
             gamma[cell] = gamma[cell]/N[cell];
          }
-         return gamma;
+         return gamma;                      //returns a 1D array of values of gamma for each cell
       }
-   }
-}
+   } //closes the internal namspace
+}  //closes the micromagnetic namespace

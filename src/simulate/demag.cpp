@@ -76,7 +76,7 @@
 #include "micromagnetic.hpp"
 
 #include <complex>
-//#include "array3d.h"
+#include "array3d.h"
 
 #include <cmath>
 #include <iostream>
@@ -99,7 +99,7 @@ namespace demag{
 	std::vector <std::vector < double > > rij_yy;
 	std::vector <std::vector < double > > rij_yz;
 	std::vector <std::vector < double > > rij_zz;
-/*
+
 	Array3D<fftw_complex> Nxx; // creates the stencil complex array Nxx
 	Array3D<fftw_complex> Nyx; // creates the stencil complex array Nyx
 	Array3D<fftw_complex> Nzx; // creates the stencil complex array Nzx
@@ -111,7 +111,20 @@ namespace demag{
 	Array3D<fftw_complex> Nxz; // creates the stencil complex array Nxz
 	Array3D<fftw_complex> Nyz; // creates the stencil complex array Nyz
 	Array3D<fftw_complex> Nzz; // creates the stencil complex array Nzz
-*/
+
+
+	Array3D<fftw_complex> Nxx2; // creates the stencil complex array Nxx
+	Array3D<fftw_complex> Nyx2; // creates the stencil complex array Nyx
+	Array3D<fftw_complex> Nzx2; // creates the stencil complex array Nzx
+
+	Array3D<fftw_complex> Nxy2; // creates the stencil complex array Nxy
+	Array3D<fftw_complex> Nyy2; // creates the stencil complex array Nyy
+	Array3D<fftw_complex> Nzy2; // creates the stencil complex array Nzy
+
+	Array3D<fftw_complex> Nxz2; // creates the stencil complex array Nxz
+	Array3D<fftw_complex> Nyz2; // creates the stencil complex array Nyz
+	Array3D<fftw_complex> Nzz2; // creates the stencil complex array Nzz
+
 	int num_macro_cells_x;
 	int num_macro_cells_y;
 	int num_macro_cells_z;
@@ -136,6 +149,7 @@ namespace demag{
 ///
 void init(){
 
+	std::cout << demag::fft << std::endl;
 	std::cout << "Initialising demagnetisation field calculation" << std::endl;
 	// check for calling of routine
 	if(err::check==true){
@@ -224,24 +238,11 @@ void init(){
 		zlog << zTs() << "Precalculation of rij matrix for demag calculation complete. Time taken: " << t2-t1 << "s."<< std::endl;
 
 	}
-	/*if(demag::fft==true) {
+	if(demag::fft==true) {
 
-		Array3D<fftw_complex> Nxx; //3D Array for dipolar field
-		Array3D<fftw_complex> Nxy;
-		Array3D<fftw_complex> Nxz;
-
-		Array3D<fftw_complex> Nyx; //3D Array for dipolar field
-		Array3D<fftw_complex> Nyy;
-		Array3D<fftw_complex> Nyz;
-
-		Array3D<fftw_complex> Nzx; //3D Array for dipolar field
-		Array3D<fftw_complex> Nzy;
-		Array3D<fftw_complex> Nzz;
-
-
-	   num_macro_cells_x = int(cs::system_dimensions[0])/int(cells::size);
-	   num_macro_cells_y = int(cs::system_dimensions[1])/int(cells::size);
-	   num_macro_cells_z = int(cs::system_dimensions[2])/int(cells::size);
+	   num_macro_cells_x = int(cs::system_dimensions[0])/int(cells::size[0]);
+	   num_macro_cells_y = int(cs::system_dimensions[1])/int(cells::size[1]);
+	   num_macro_cells_z = int(cs::system_dimensions[2])/int(cells::size[2]);
 
 		Nxx.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
 	   Nxy.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
@@ -256,6 +257,18 @@ void init(){
 		Nzz.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
 
 
+		Nxx2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+	   Nxy2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+	   Nxz2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+
+		Nyx2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+	   Nyy2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+	   Nyz2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+
+		Nzx2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+		Nzy2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+		Nzz2.resize(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z);
+
 
 	double ii,jj,kk;
 	   for(int i=0;i<num_macro_cells_x*2;i++){
@@ -269,9 +282,9 @@ void init(){
 	            else kk = k;
 	            if((ii!=jj) && (jj != kk)){
 
-	               const double rx = ii*cells::size; // Angstroms
-	               const double ry = jj*cells::size;
-	               const double rz = kk*cells::size;
+	               const double rx = ii*cells::size[0]; // Angstroms
+	               const double ry = jj*cells::size[1];
+	               const double rz = kk*cells::size[2];
 
 	               const double rij = 1.0/pow(rx*rx+ry*ry+rz*rz,0.5);
 
@@ -293,11 +306,12 @@ void init(){
 						Nzx(i,j,k)[0] = prefactor*(3.0*ex*ex - 1.0)*rij3;
 						Nzy(i,j,k)[0] = prefactor*(3.0*ex*ey      )*rij3;
 						Nzz(i,j,k)[0] = prefactor*(3.0*ex*ez      )*rij3;
+				//		std::cout << 	i << '\t' << j << "\t" << k << '\t' << Nxx(i,j,k)[0] <<std::endl;
 	            }
 	         }
 	      }
 	   }
-	}*/
+	}
 
 	// timing function
    #ifdef MPICF
@@ -492,11 +506,11 @@ inline void std_update(){
 	//err::vexit();
 }
 
-/*
+
 void fft_update()
 {
-
-	// check for callin of routine
+	std::cout << "fft" << std::endl;
+		// check for callin of routine
 	if(err::check==true){
 		terminaltextcolor(RED);
 		std::cerr << "demag::fft_update has been called " << vmpi::my_rank << std::endl;
@@ -523,6 +537,8 @@ void fft_update()
       Mx.IFillComplex(0.0);
       My.IFillComplex(0.0);
       Mz.IFillComplex(0.0);
+
+	//		std::cout << "a" <<std::endl;
 		int cell = 0;
 		int ii,jj,kk;
 		for (int i=0 ; i<2*num_macro_cells_x; i++){
@@ -546,37 +562,41 @@ void fft_update()
       fftw_plan NxxP,NxyP,NxzP,NyxP,NyyP,NyzP,NzxP,NzyP,NzzP;
       fftw_plan MxP,MyP,MzP;
 
+
+				//		std::cout << "c" <<std::endl;
+
+			//			std::cout<< Nxx.dimm0() <<std::endl;
       //deterines the forward transform for the N arrays
-      NxxP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nxx.ptr(),Nxx.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
-		std::cout << 'd' <<std::endl;
+      NxxP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nxx.ptr(),Nxx2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+	//	std::cout << 'd' << "\t" << 	Nxx(0,0,0)[0] <<std::endl;
 	   fftw_execute(NxxP);
-		std::cout << 'd' <<std::endl;
-      NyxP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nyx.ptr(),Nyx.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+	//	std::cout << 'd' <<std::endl;
+      NyxP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nyx.ptr(),Nyx2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(NyxP);
-      NzxP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nzx.ptr(),Nzx.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+      NzxP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nzx.ptr(),Nzx2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(NzxP);
-		std::cout << 'r' <<std::endl;
-      NxyP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nxy.ptr(),Nxy.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+	//	std::cout << 'r' <<std::endl;
+      NxyP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nxy.ptr(),Nxy2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(NxyP);
-      NyyP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nyy.ptr(),Nyy.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+      NyyP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nyy.ptr(),Nyy2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(NyyP);
-      NzyP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nzy.ptr(),Nzy.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+      NzyP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nzy.ptr(),Nzy2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(NzyP);
-		std::cout << 'f' <<std::endl;
-      NxzP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nxz.ptr(),Nxz.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+	//	std::cout << 'f' <<std::endl;
+      NxzP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nxz.ptr(),Nxz2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(NxzP);
-      NyzP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nyz.ptr(),Nyz.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+      NyzP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nyz.ptr(),Nyz2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(NyzP);
-      NzzP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nzz.ptr(),Nzz.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
+      NzzP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Nzz.ptr(),Nzz2.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(NzzP);
-		std::cout << 'g' <<std::endl;
+		//std::cout << 'g' <<std::endl;
       MxP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Mx.ptr(),Mx.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(MxP);
       MyP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,My.ptr(),My.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(MyP);
       MzP = fftw_plan_dft_3d(2*num_macro_cells_x,2*num_macro_cells_y,2*num_macro_cells_z,Mz.ptr(),Mz.ptr(),FFTW_FORWARD,FFTW_ESTIMATE);
       fftw_execute(MzP);
-		std::cout << 'h' <<std::endl;
+		//std::cout << 'h' <<std::endl;
 
 
 
@@ -633,12 +653,13 @@ double pi = 3.14;
 				cells::x_field_array[cell] = 1.0e-7*Hx(i,j,k)[0]/((2.0*num_macro_cells_x)*(2.0*num_macro_cells_y)*(2.0*num_macro_cells_z));
 				cells::y_field_array[cell] = 1.0e-7*Hy(i,j,k)[0]/((2.0*num_macro_cells_x)*(2.0*num_macro_cells_y)*(2.0*num_macro_cells_z));
 				cells::z_field_array[cell] = 1.0e-7*Hz(i,j,k)[0]/((2.0*num_macro_cells_x)*(2.0*num_macro_cells_y)*(2.0*num_macro_cells_z));
-				std::cout << cells::x_field_array[cell] << '\t' << cells::y_field_array[cell] << '\t' << cells::z_field_array[cell] <<std::endl;
+			//	std::cout << cells::x_field_array[cell] << '\t' << cells::y_field_array[cell] << '\t' << cells::z_field_array[cell] <<std::endl;
 				cell++;
 			}
 		}
 	}
-}*/
+//std::cout << cells::x_field_array[cell] << '\t' << cells::y_field_array[cell] << '\t' << cells::z_field_array[cell] <<std::endl;
+}
 
 /// @brief Wrapper Function to update demag fields
 ///
@@ -679,7 +700,7 @@ void update(){
 
 		// recalculate demag fields
 		if(demag::fast==true) fast_update();
-	//	else if(demag::fft==true) fft_update();
+		else if(demag::fft==true) fft_update();
 		else std_update();
 
 		// For MPI version, only add local atoms

@@ -6,13 +6,12 @@
 #include <math.h>
 #include "material.hpp"
 
-namespace micromagnetic
-{
+namespace micromagnetic{
 
-   namespace internal
-   {
-      std::vector<double> calculate_chi_perp(int num_cells, double T)
-      {
+   namespace internal{
+     //calcuaktes the temperature dependant perpendicular component of the susceptability from the analytical equation
+
+      std::vector<double> calculate_chi_perp(int num_cells, double T){
 
          // -----------------------------------------------------------------------------------
 
@@ -21,7 +20,7 @@ namespace micromagnetic
 
          // -----------------------------------------------------------------------------------
 
-         std::vector<double>  chi(num_cells,0.0);
+         std::vector<double>  chi(num_cells,0.0);     //1D vector the store the perpendicular susceptability for each cell
 
          //Fit Parameters
        	double a0 = 0.00211549427182711;
@@ -42,7 +41,7 @@ namespace micromagnetic
          chi_0 = chi_0*9.54393845712027;
 
          for (int cell = 0; cell < num_cells; cell ++){
-            //calculates the sum over i from 0 - 9 for
+            //calculates the perpendicular susceptability from the analytical expression
             if(T<(1.068*Tc[cell])) chi[cell] = a0+ a1*((1.068*Tc[cell]-T)/(1.068*Tc[cell]))+ a2*pow((((1.068*Tc[cell])-T)/(1.068*Tc[cell])),2.)+ a3*pow((((1.068*Tc[cell])-T)/(1.068*Tc[cell])),3.)+ a4*pow((((1.068*Tc[cell])-T)/(1.068*Tc[cell])),4.) + a5*pow((((1.068*Tc[cell])-T)/(1.068*Tc[cell])),5.) + a6*pow((((1.068*Tc[cell])-T)/(1.068*Tc[cell])),6.) + a7*pow((((1.068*Tc[cell])-T)/(1.068*Tc[cell])),7.)+ a8*pow((((1.068*Tc[cell])-T)/(1.068*Tc[cell])),8.) + a9*pow((((1.068*Tc[cell])-T)/(1.068*Tc[cell])),9.);
             else chi[cell] = (0.8*1.4/660.*Tc[cell])/(4*PI)/(T-Tc[cell]);
 
@@ -53,7 +52,7 @@ namespace micromagnetic
             //returns the anisotropy constant
             chi[cell] = -ms[cell]*chi[cell]/ku[cell];
          }
-         return chi;
+         return chi;            //returns the 1D vector containing the perpencicular susceptability for each cell,
       }
-   }
-}
+   } //closes the internal namspace
+}  //closes the micromagnetic namespace

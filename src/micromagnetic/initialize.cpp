@@ -92,13 +92,13 @@ namespace micromagnetic{
       mm::y_heun_array.resize(num_cells,0.0);
       mm::z_heun_array.resize(num_cells,0.0);
 
-      mm::mx_store.resize(num_cells,0.0);
-      mm::my_store.resize(num_cells,0.0);
-      mm::mz_store.resize(num_cells,0.0);
-
       mm::mx_init.resize(num_cells,0.0);
       mm::my_init.resize(num_cells,0.0);
       mm::mz_init.resize(num_cells,0.0);
+
+      mm::mx_store.resize(num_cells,0.0);
+      mm::my_store.resize(num_cells,0.0);
+      mm::mz_store.resize(num_cells,0.0);
 
       mm::m_e.resize(num_cells,0.0);
       mm::alpha_para.resize(num_cells,0.0);
