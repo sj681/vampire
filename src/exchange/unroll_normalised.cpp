@@ -34,7 +34,7 @@ namespace exchange{
    // This requires additional memory since each interaction is potentially
    // unique, requiring that the whole exchange list be unrolled
    //----------------------------------------------------------------------------
-   void unroll_normalised_exchange_interactions(){
+   void unroll_normalised_exchange_interactions(std::vector<std::vector <cs::neighbour_t> >& cneighbourlist){
 
    	// temporary class variables
    	zval_t tmp_zval;
@@ -49,14 +49,37 @@ namespace exchange{
    			atoms::i_exchange_list.reserve(atoms::neighbour_list_array.size());
    			// loop over all interactions
    			for(int atom = 0; atom < atoms::num_atoms; atom++){
-   				const int imaterial = atoms::type_array[atom];
-   				for(int nn = atoms::neighbour_list_start_index[atom]; nn <= atoms::neighbour_list_end_index[atom]; nn++){
-   					const int natom = atoms::neighbour_list_array[nn];
-   					const int jmaterial = atoms::type_array[natom];
-   					atoms::i_exchange_list.push_back(tmp_zval);
-                  // get unit cell interaction id
-                  int i = atoms::neighbour_interaction_type_array[nn];
-                  atoms::i_exchange_list[nn].Jij = cs::unit_cell.interaction[i].Jij[0][0] * mp::material[imaterial].Jij_matrix[jmaterial][0];
+                  const int imaterial = atoms::type_array[atom];
+                     for(unsigned int nn = 0; nn < cneighbourlist[atom].size(); nn++){
+      					const int natom = atoms::neighbour_list_array[nn];
+                  //   std::cout << atoms::atom_coords_x[atom] << '\t' << atoms::atom_coords_y[atom] << '\t' << atoms::atom_coords_z[atom] <<"\t" << atoms::atom_coords_x[natom] << '\t' << atoms::atom_coords_y[natom] << '\t' << atoms::atom_coords_z[natom] <<  std::endl;
+                     double dx = cneighbourlist[atom][nn].vx;
+                     double dy = cneighbourlist[atom][nn].vy;
+                     double dz = cneighbourlist[atom][nn].vz;
+                     double d = sqrt(sqrt(dx*dx + dy*dy)*sqrt(dx*dx + dy*dy) + dz*dz);
+                     double J = 1.0;
+   					   const int jmaterial = atoms::type_array[natom];
+
+
+                     if (imaterial <4 ||  imaterial ==9){
+                        if (jmaterial <4 ||  jmaterial ==9){
+                           if (d  > 2.6 && d < 2.7 ) J = 1.0;
+                           else if (d  > 3.7 && d <3.8 ) J = -0.8;
+                           else std::cout << d << std::endl;
+                        }
+                     }
+
+                     else if (imaterial <8 && jmaterial <8){
+                        if (d  > 2.6 && d < 2.7 ) J = 1.0;
+                        else if (d  > 3.7 && d <3.8 ) J = 0.0;
+                     }
+
+      					atoms::i_exchange_list.push_back(tmp_zval);
+                     // get unit cell interaction id
+                     int i = atoms::neighbour_interaction_type_array[nn];
+                     std::cout << i << "\t" << cs::unit_cell.interaction[i].Jij[0][0] << std::endl;
+                     atoms::i_exchange_list[nn].Jij = cs::unit_cell.interaction[i].Jij[0][0] * mp::material[imaterial].Jij_matrix[jmaterial][0] * J;
+
    					// reset interation id to neighbour number - causes segfault if nn out of range
    					atoms::neighbour_interaction_type_array[nn] = nn;
    				}

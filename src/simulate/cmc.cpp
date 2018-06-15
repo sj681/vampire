@@ -186,9 +186,16 @@ void rotate_spins_around_z_axis(double ddz){
 			Sold[0]=atoms::x_spin_array[atom];
 			Sold[1]=atoms::y_spin_array[atom];
 			Sold[2]=atoms::z_spin_array[atom];
+                                          //Roberto
+			                        //        std::cout << "VIEJO Spin" << "\t" << Sold[0]  <<  "\t" << Sold[1]  <<  "\t" <<  Sold[2]  <<  "\t" <<std::endl;
+
+
 
 			// Calculate new spin positions
 			Snew = vmath::matmul(Sold,z_rotation_matrix);
+                               //Roberto
+			            //    std::cout << "Nuevo Spin" << "\t" << Snew[0]  <<  "\t" << Snew[1]  <<  "\t" <<  Snew[2]  <<  "\t" <<std::endl;
+
 
 			// Set new spin positions
 			atoms::x_spin_array[atom]=Snew[0];
@@ -200,12 +207,12 @@ void rotate_spins_around_z_axis(double ddz){
 }
 
 /// Function to rotate all spin around the x-axis
-void rotate_spins_around_x_axis(double ddx){
+void rotate_spins_around_y_axis(double ddy){
 
 	std::vector< std::vector<double> > x_rotation_matrix,y_rotation_matrix,z_rotation_matrix;
 
 	// determine rotational matrices for phi, theta rotation
-	vmath::set_rotational_matrix(ddx, 0.0, 0.0, x_rotation_matrix,y_rotation_matrix,z_rotation_matrix);
+	vmath::set_rotational_matrix(0.0, ddy, 0.0, x_rotation_matrix,y_rotation_matrix,z_rotation_matrix);
 
 	//vmath::print_matrix(x_rotation_matrix);
 
@@ -217,9 +224,16 @@ void rotate_spins_around_x_axis(double ddx){
 		Sold[0]=atoms::x_spin_array[atom];
 		Sold[1]=atoms::y_spin_array[atom];
 		Sold[2]=atoms::z_spin_array[atom];
+	                                  //Roberto
+		      //         std::cout << "VIEJO Spin" << "\t" << Sold[0]  <<  "\t" << Sold[1]  <<  "\t" <<  Sold[2]  <<  "\t" <<std::endl;
+		//		std::cout << "Angulo rotado" << "\t" <<ddy <<"\t" <<std::endl;
 
 		// Calculate new spin positions
-		Snew = vmath::matmul(Sold,x_rotation_matrix);
+//Roberto
+		//		Snew = vmath::matmul(Sold,x_rotation_matrix);
+				Snew = vmath::matmul(Sold,y_rotation_matrix);
+                                //Roberto
+	//	std::cout << "Nuevo Spin" << "\t" << Snew[0]  <<  "\t" << Snew[1]  <<  "\t" <<  Snew[2]  <<  "\t" <<std::endl;
 
 		// Set new spin positions
 		atoms::x_spin_array[atom]=Snew[0];
@@ -234,8 +248,7 @@ void rotate_spins_around_x_axis(double ddx){
 
 namespace sim{
 ///
-/// @brief        Initialise Constrained Monte Carlo module
-///
+
 /// Creates the rotation matices for the given angle and computes the
 /// Boltzmann factor for the given temperature.
 ///
@@ -261,10 +274,18 @@ void CMCinit(){
 		double sz=cos(sim::constraint_phi*M_PI/180.0);
 
 		for(int atom =0;atom<atoms::num_atoms;atom++){
+
 			atoms::x_spin_array[atom]=sx;
 			atoms::y_spin_array[atom]=sy;
 			atoms::z_spin_array[atom]=sz;
+
+			        //Roberto
+			   //     std::cout << "hola" << "\t" << constraint_phi  <<  "\t" << constraint_theta  <<std::endl;
+                  //               std::cout << "Initial Spin" << "\t" << sx  <<  "\t" << sy  <<  "\t" << sz  <<std::endl;
+
 		}
+	                      sim::constraint_theta_changed=true;
+			       sim::constraint_phi_changed=false;
 	}
    // If the simulation is restarted from within the temperature loop, then the spin configurations must not be reinitialised
    else if(sim::checkpoint_loaded_flag==true){
@@ -284,23 +305,47 @@ void CMCinit(){
 
 		double phi_old = sim::constraint_phi;
 		double phi_new = sim::constraint_phi;
+                                //Roberto
+		                             //   std::cout << "hola2" << "\t" << constraint_phi  <<  "\t" << constraint_theta  <<std::endl;
+        //                                        std::cout << "Condiciones" << "\t" << sim::constraint_phi_changed  <<  "\t" << sim::constraint_theta_changed  <<std::endl;
 
 		// note - sim::constraint_phi, sim::constraint_theta are already at new angle
-		if(sim::constraint_theta_changed) theta_old = sim::constraint_theta - sim::constraint_theta_delta;
-		if(sim::constraint_phi_changed) phi_old     = sim::constraint_phi   - sim::constraint_phi_delta;
+		if(sim::constraint_theta_changed==true) theta_old = sim::constraint_theta - sim::constraint_theta_delta;
+		if(sim::constraint_phi_changed==true) phi_old     = sim::constraint_phi   - sim::constraint_phi_delta;
 
 		// Rotate all spins from theta_old to theta = 0 (reference direction along x)
-		cmc::rotate_spins_around_z_axis(-theta_old);
+//		cmc::rotate_spins_around_z_axis(-theta_old);
 
 		// Rotate all spins from phi_old to phi_new
-		cmc::rotate_spins_around_x_axis(phi_new-phi_old);
+		std::cout << "phi_new, phi_new, phi_new-phi_old"  << "\t" <<  phi_new  << "\t" << phi_old << "\t" <<  phi_new-phi_old<< "\t" <<std::endl;
 
+		cmc::rotate_spins_around_y_axis(phi_new-phi_old);
 		// Rotate all spins from theta = 0 to theta = theta_new
-		cmc::rotate_spins_around_z_axis(theta_new);
+ 		std::cout << "theta_new, theta_old, theta_new-theta_old"  << "\t" <<  theta_new  << "\t" << theta_old << "\t" <<  theta_new-theta_old<< "\t" <<std::endl;
+
+		cmc::rotate_spins_around_z_axis(theta_new-theta_old);
 
 		// reset rotation flags
-		sim::constraint_theta_changed = false;
-		sim::constraint_phi_changed   = false;
+		if(phi_new-phi_old==0 ){
+		  sim::constraint_phi_changed   = true;
+		  sim::constraint_phi_changed   = false;
+
+			//	std::cout << "phi did not change" <<std::endl;
+		}
+		else if(phi_new-phi_old!=0 ){
+			sim::constraint_phi_changed   = false;
+			sim::constraint_phi_changed   = false;
+
+			// std::cout << "phi did change" <<std::endl;
+								                }
+	       if(theta_new==360){
+				 sim::constraint_theta_changed = false;
+				 sim::constraint_phi_changed   = true;
+				 //	 std::cout << "Starting new phi" <<std::endl;
+	       }
+
+//		sim::constraint_theta_changed = false;
+//		sim::constraint_phi_changed   = false;
 
 	}
 

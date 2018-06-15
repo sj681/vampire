@@ -80,8 +80,8 @@ namespace exchange{
       // Internal function declarations
       //-------------------------------------------------------------------------
       void calculate_dmi(std::vector<std::vector <cs::neighbour_t> >& cneighbourlist);
-      void unroll_exchange_interactions();
-      void unroll_normalised_exchange_interactions();
+      void unroll_exchange_interactions(std::vector<std::vector <cs::neighbour_t> >& cneighbourlist);
+      void unroll_normalised_exchange_interactions(std::vector<std::vector <cs::neighbour_t> >& cneighbourlist);
 
    } // end of internal namespace
 

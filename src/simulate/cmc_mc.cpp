@@ -197,6 +197,46 @@ void rotate_material_spins_around_z_axis(double ddz, int material){
 	return;
 }
 
+void rotate_material_spins_around_y_axis(double ddy, int material){
+
+	std::vector< std::vector<double> > x_rotation_matrix,y_rotation_matrix,z_rotation_matrix;
+
+	// determine rotational matrices for phi, theta rotation
+	vmath::set_rotational_matrix(0.0, ddy, 0.0, x_rotation_matrix,y_rotation_matrix,z_rotation_matrix);
+
+	//vmath::print_matrix(x_rotation_matrix);
+
+	// loop over all spins and rotate by phi around x
+	for(int atom =0;atom<atoms::num_atoms;atom++){
+		std::vector<double> Sold(3), Snew(3); // Vectors to hold spins
+		int mat=atoms::type_array[atom];
+		if(mat==material){
+		// Load spin coordinates
+		Sold[0]=atoms::x_spin_array[atom];
+		Sold[1]=atoms::y_spin_array[atom];
+		Sold[2]=atoms::z_spin_array[atom];
+	                                     //Roberto
+		      //         std::cout << "VIEJO Spin" << "\t" << Sold[0]  <<  "\t" << Sold[1]  <<  "\t" <<  Sold[2]  <<  "\t" <<std::endl;
+		//		std::cout << "Angulo rotado" << "\t" <<ddy <<"\t" <<std::endl;
+
+		// Calculate new spin positions
+//Roberto
+		//		Snew = vmath::matmul(Sold,x_rotation_matrix);
+				Snew = vmath::matmul(Sold,y_rotation_matrix);
+                                //Roberto
+	//	std::cout << "Nuevo Spin" << "\t" << Snew[0]  <<  "\t" << Snew[1]  <<  "\t" <<  Snew[2]  <<  "\t" <<std::endl;
+
+		// Set new spin positions
+		atoms::x_spin_array[atom]=Snew[0];
+		atoms::y_spin_array[atom]=Snew[1];
+		atoms::z_spin_array[atom]=Snew[2];
+		}
+	}
+
+	return;
+}
+
+
 /// Function to rotate all spin around the x-axis
 void rotate_material_spins_around_x_axis(double ddx, int material){
 
@@ -207,8 +247,8 @@ void rotate_material_spins_around_x_axis(double ddx, int material){
 
 	// loop over all spins and rotate by phi around x
 	for(int atom =0;atom<atoms::num_atoms;atom++){
-		int mat=atoms::type_array[atom];
-		if(mat==material){
+	//	int mat=atoms::type_array[atom];
+	//	if(mat==material){
 			std::vector<double> Sold(3), Snew(3); // Vectors to hold spins
 
 			// Load spin coordinates
@@ -223,7 +263,7 @@ void rotate_material_spins_around_x_axis(double ddx, int material){
 			atoms::x_spin_array[atom]=Snew[0];
 			atoms::y_spin_array[atom]=Snew[1];
 			atoms::z_spin_array[atom]=Snew[2];
-		}
+		//}
 	}
 
 	return;
@@ -268,6 +308,11 @@ void CMCMCinit(){
 			double sx=sin(cmc::cmc_mat[imat].constraint_phi*M_PI/180.0)*cos(cmc::cmc_mat[imat].constraint_theta*M_PI/180.0);
 			double sy=sin(cmc::cmc_mat[imat].constraint_phi*M_PI/180.0)*sin(cmc::cmc_mat[imat].constraint_theta*M_PI/180.0);
 			double sz=cos(cmc::cmc_mat[imat].constraint_phi*M_PI/180.0);
+			//std::cout << "phi:\t" << cmc::cmc_mat[imat].constraint_phi << "\t" << "theta:\t" << cmc::cmc_mat[imat].constraint_theta << "\t" << sx << '\t' << '\t' << sy << '\t' << sz << std::endl;
+			if (sx == -0) sx = 0;
+			if (sy == -0) sy = 0;
+			if (sz == -0) sz = 0;
+
 			atoms::x_spin_array[atom]=sx;
 			atoms::y_spin_array[atom]=sy;
 			atoms::z_spin_array[atom]=sz;
@@ -295,17 +340,47 @@ void CMCMCinit(){
 		if(sim::constraint_phi_changed) phi_old     = cmc::cmc_mat[cmc::active_material].constraint_phi - cmc::cmc_mat[cmc::active_material].constraint_phi_delta;
 
 		// Rotate all spins in active material from theta_old to theta = 0 (reference direction along x)
-		cmc::rotate_material_spins_around_z_axis(-theta_old, cmc::active_material);
+		//cmc::rotate_material_spins_around_z_axis(-theta_old, cmc::active_material);
 
 		// Rotate all spins in active material from phi_old to phi_new
-		cmc::rotate_material_spins_around_x_axis(phi_new-phi_old, cmc::active_material);
+		//cmc::rotate_material_spins_around_x_axis(phi_new-phi_old, cmc::active_material);
 
 		// Rotate all spins in active material from theta = 0 to theta = theta_new
-		cmc::rotate_material_spins_around_z_axis(theta_new, cmc::active_material);
+		//cmc::rotate_material_spins_around_z_axis(theta_new, cmc::active_material);
+
+		// Rotate all spins in active material from theta_old to theta = 0 (reference direction along x)
+		cmc::rotate_material_spins_around_y_axis(phi_new-phi_old, cmc::active_material);
+
+		// Rotate all spins in active material from phi_old to phi_new
+		cmc::rotate_material_spins_around_z_axis(theta_new-theta_old, cmc::active_material);
+
+		//std::cout << "phi_new, phi_new, phi_new-phi_old"  << "\t" <<  phi_new  << "\t" << phi_old << "\t" <<  phi_new-phi_old<< "\t" <<std::endl;
+
+		// Rotate all spins from theta = 0 to theta = theta_new
+ 		//std::cout << "theta_new, theta_old, theta_new-theta_old"  << "\t" <<  theta_new  << "\t" << theta_old << "\t" <<  theta_new-theta_old<< "\t" <<std::endl;
 
 		// reset rotation flags
-		sim::constraint_theta_changed = false;
-		sim::constraint_phi_changed   = false;
+		if(phi_new-phi_old==0 ){
+		  sim::constraint_phi_changed   = true;
+		  sim::constraint_phi_changed   = false;
+			//	std::cout << "phi did not change" <<std::endl;
+		}
+
+		else if(phi_new-phi_old!=0 ){
+			sim::constraint_phi_changed   = false;
+			sim::constraint_phi_changed   = false;
+			// std::cout << "phi did change" <<std::endl;
+		}
+
+       if(theta_new==360){
+			 sim::constraint_theta_changed = false;
+			 sim::constraint_phi_changed   = true;
+			 //	 std::cout << "Starting new phi" <<std::endl;
+      }
+
+		// reset rotation flags
+	//	sim::constraint_theta_changed = false;
+	//	sim::constraint_phi_changed   = false;
 
 	}
 

@@ -95,13 +95,8 @@ void cmc_anisotropy(){
 
 	// set minimum rotational angle
    // if checkpoint is loaded, then update minimum values of temperature and constrained angles
-	if(sim::load_checkpoint_flag && sim::load_checkpoint_continue_flag && sim::checkpoint_loaded_flag==true){
-      zlog << zTs() << "Constrained angles theta loaded from checkpoint " << sim::constraint_theta <<  std::endl;
-   }
-   else sim::constraint_theta=sim::constraint_theta_min;
+        ////  Inicio de cambios Roberto  (Invierto el orden de phi y theta)
 
-	// perform rotational angle sweep
-	while(sim::constraint_theta<=sim::constraint_theta_max){
 
 		// set minimum azimuthal angle
       // if checkpoint is loaded, then update minimum values of temperature and constrained angles
@@ -113,9 +108,30 @@ void cmc_anisotropy(){
 		// perform azimuthal angle sweep
 		while(sim::constraint_phi<=sim::constraint_phi_max){
 
+
+		        if(sim::load_checkpoint_flag && sim::load_checkpoint_continue_flag && sim::checkpoint_loaded_flag==true){
+				      zlog << zTs() << "Constrained angles theta loaded from checkpoint " << sim::constraint_theta <<  std::endl;
+				         }
+
+			   else sim::constraint_theta=sim::constraint_theta_min;
+
+			           // perform rotational angle sweep
+			           while(sim::constraint_theta<=sim::constraint_theta_max){
+
+
+
+
+			///////  Final de cambios Roberto
+
+					//   std::cout << "LLamamos a la subrutina" << "\t" <<std::endl;
+//                                         std::cout << "   " << "\t" <<std::endl;
+				//	 std::cout << "  Parametros de entrada          sim::constraint_rotation         sim::constraint_theta_changed       sim::constraint_phi_changed      " << "\t" <<std::endl;
+            //           std::cout <<          sim::constraint_rotation   << "\t"   <<    sim::constraint_theta_changed   << "\t"   <<      sim::constraint_phi_changed    << "\t" <<std::endl;
+
 			// Re-initialise spin moments for CMC
 			sim::CMCinit();
 
+			        //         std::cout << "   " << "\t" <<std::endl;
 			// Set starting temperature
          // if checkpoint is loaded, then update minimum values of temperature
 	      if(sim::load_checkpoint_flag && sim::load_checkpoint_continue_flag && sim::checkpoint_loaded_flag==true){
@@ -157,19 +173,21 @@ void cmc_anisotropy(){
 				sim::temperature+=sim::delta_temperature;
 
 			} // End of temperature loop
-
-			// Increment azimuthal angle
-			sim::constraint_phi+=sim::constraint_phi_delta;
-			sim::constraint_phi_changed=true;
+        ////  Inicio de cambios Roberto  (Invierto el orden de phi y theta)
+                // Increment rotational angle
+			                sim::constraint_theta+=sim::constraint_theta_delta;
+				//	                sim::constraint_theta_changed=true;
 
 		} // End of azimuthal angle sweep
       if(vout::gnuplot_array_format) zmag << std::endl;
 
-		// Increment rotational angle
-		sim::constraint_theta+=sim::constraint_theta_delta;
-		sim::constraint_theta_changed=true;
+                        // Increment azimuthal angle
+		                        sim::constraint_phi+=sim::constraint_phi_delta;
+				//	                        sim::constraint_phi_changed=true;
+
 
 	} // End of rotational angle sweep
+                        ///////  Final de cambios Roberto
 
 	return;
 }

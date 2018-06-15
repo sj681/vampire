@@ -90,7 +90,7 @@ namespace exchange{
    	}
 
       // Unroll exchange interactions
-      exchange::internal::unroll_exchange_interactions();
+      exchange::internal::unroll_exchange_interactions(cneighbourlist);
 
       // Calculate Dzyaloshinskii-Moriya interactions (must be done after exchange unrolling)
       exchange::internal::calculate_dmi(cneighbourlist);
