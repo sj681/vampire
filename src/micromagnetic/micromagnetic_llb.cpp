@@ -244,27 +244,26 @@ int LLB( std::vector <int> local_cell_array,
 		//calculates delta terms
       xyz[0]=  - (m[1]*H[2]-m[2]*H[1])
                + mm::alpha_para[cell]*m[0]*SdotH*one_o_m_squared
-               - mm::alpha_perp[cell]*(m[1]*(m[0]*H[1]-m[1]*H[0])-m[2]*(m[2]*H[0]-m[0]*H[2]))*one_o_m_squared
-               + GW1x[cell]*sigma_para
-               - mm::alpha_perp[cell]*(m[1]*(m[0]*GW2t[1]-m[1]*GW2t[0])-m[2]*(m[2]*GW2t[0]-m[0]*GW2t[2]))*one_o_m_squared*sigma_perp;
+               - mm::alpha_perp[cell]*(m[1]*(m[0]*H[1]-m[1]*H[0])-m[2]*(m[2]*H[0]-m[0]*H[2]))*one_o_m_squared;
+          //     + GW1x[cell]*sigma_para
+          //     - mm::alpha_perp[cell]*(m[1]*(m[0]*GW2t[1]-m[1]*GW2t[0])-m[2]*(m[2]*GW2t[0]-m[0]*GW2t[2]))*one_o_m_squared*sigma_perp;
 
       xyz[1]=  - (m[2]*H[0]-m[0]*H[2])
                + mm::alpha_para[cell]*m[1]*SdotH*one_o_m_squared
-               - mm::alpha_perp[cell]*(m[2]*(m[1]*H[2]-m[2]*H[1])-m[0]*(m[0]*H[1]-m[1]*H[0]))*one_o_m_squared
-               + GW1y[cell]*sigma_para
-               - mm::alpha_perp[cell]*(m[2]*(m[1]*GW2t[2]-m[2]*GW2t[1])-m[0]*(m[0]*GW2t[1]-m[1]*GW2t[0]))*one_o_m_squared*sigma_perp;
+               - mm::alpha_perp[cell]*(m[2]*(m[1]*H[2]-m[2]*H[1])-m[0]*(m[0]*H[1]-m[1]*H[0]))*one_o_m_squared;
+            //   + GW1y[cell]*sigma_para
+            //   - mm::alpha_perp[cell]*(m[2]*(m[1]*GW2t[2]-m[2]*GW2t[1])-m[0]*(m[0]*GW2t[1]-m[1]*GW2t[0]))*one_o_m_squared*sigma_perp;
 
       xyz[2]=  - (m[0]*H[1]-m[1]*H[0])
                + mm::alpha_para[cell]*m[2]*SdotH*one_o_m_squared
-               - mm::alpha_perp[cell]*(m[0]*(m[2]*H[0]-m[0]*H[2])-m[1]*(m[1]*H[2]-m[2]*H[1]))*one_o_m_squared
-               + GW1z[cell]*sigma_para
-               - mm::alpha_perp[cell]*(m[0]*(m[2]*GW2t[0]-m[0]*GW2t[2])-m[1]*(m[1]*GW2t[2]-m[2]*GW2t[1]))*one_o_m_squared*sigma_perp;
+               - mm::alpha_perp[cell]*(m[0]*(m[2]*H[0]-m[0]*H[2])-m[1]*(m[1]*H[2]-m[2]*H[1]))*one_o_m_squared;
+            //   + GW1z[cell]*sigma_para
+            //   - mm::alpha_perp[cell]*(m[0]*(m[2]*GW2t[0]-m[0]*GW2t[2])-m[1]*(m[1]*GW2t[2]-m[2]*GW2t[1]))*one_o_m_squared*sigma_perp;
 
 
       x_euler_array[cell] = xyz[0];
       y_euler_array[cell] = xyz[1];
       z_euler_array[cell] = xyz[2];
-
 
    }
 
@@ -302,6 +301,7 @@ int LLB( std::vector <int> local_cell_array,
 
    	const double H[3] = {spin_field[0], spin_field[1], spin_field[2]};
 
+
    	//saves the noise terms to an array
    	const double GW2t[3] = {GW2x[cell],GW2y[cell],GW2z[cell]};
    	const double one_o_m_squared = 1.0/(m[0]*m[0]+m[1]*m[1]+m[2]*m[2]);
@@ -312,23 +312,23 @@ int LLB( std::vector <int> local_cell_array,
    	//calculates the LLB deltas
    	xyz[0]=  - (m[1]*H[2]-m[2]*H[1])
                + mm::alpha_para[cell]*m[0]*SdotH*one_o_m_squared
-               - mm::alpha_perp[cell]*(m[1]*(m[0]*H[1]-m[1]*H[0])-m[2]*(m[2]*H[0]-m[0]*H[2]))*one_o_m_squared
-               + GW1x[cell]*sigma_para
-               - mm::alpha_perp[cell]*(m[1]*(m[0]*GW2t[1]-m[1]*GW2t[0])-m[2]*(m[2]*GW2t[0]-m[0]*GW2t[2]))*one_o_m_squared*sigma_perp;
+               - mm::alpha_perp[cell]*(m[1]*(m[0]*H[1]-m[1]*H[0])-m[2]*(m[2]*H[0]-m[0]*H[2]))*one_o_m_squared;
+    //           + GW1x[cell]*sigma_para
+    //           - mm::alpha_perp[cell]*(m[1]*(m[0]*GW2t[1]-m[1]*GW2t[0])-m[2]*(m[2]*GW2t[0]-m[0]*GW2t[2]))*one_o_m_squared*sigma_perp;
 
    	xyz[1]=  - (m[2]*H[0]-m[0]*H[2])
                + mm::alpha_para[cell]*m[1]*SdotH*one_o_m_squared
-               - mm::alpha_perp[cell]*(m[2]*(m[1]*H[2]-m[2]*H[1])-m[0]*(m[0]*H[1]-m[1]*H[0]))*one_o_m_squared
-               + GW1y[cell]*sigma_para
-               - mm::alpha_perp[cell]*(m[2]*(m[1]*GW2t[2]-m[2]*GW2t[1])-m[0]*(m[0]*GW2t[1]-m[1]*GW2t[0]))*one_o_m_squared*sigma_perp;
+               - mm::alpha_perp[cell]*(m[2]*(m[1]*H[2]-m[2]*H[1])-m[0]*(m[0]*H[1]-m[1]*H[0]))*one_o_m_squared;
+      //         + GW1y[cell]*sigma_para
+        //       - mm::alpha_perp[cell]*(m[2]*(m[1]*GW2t[2]-m[2]*GW2t[1])-m[0]*(m[0]*GW2t[1]-m[1]*GW2t[0]))*one_o_m_squared*sigma_perp;
 
    	xyz[2]=	- (m[0]*H[1]-m[1]*H[0])
                + mm::alpha_para[cell]*m[2]*SdotH*one_o_m_squared
-               - mm::alpha_perp[cell]*(m[0]*(m[2]*H[0]-m[0]*H[2])-m[1]*(m[1]*H[2]-m[2]*H[1]))*one_o_m_squared
-               + GW1z[cell]*sigma_para
-               - mm::alpha_perp[cell]*(m[0]*(m[2]*GW2t[0]-m[0]*GW2t[2])-m[1]*(m[1]*GW2t[2]-m[2]*GW2t[1]))*one_o_m_squared*sigma_perp;
+               - mm::alpha_perp[cell]*(m[0]*(m[2]*H[0]-m[0]*H[2])-m[1]*(m[1]*H[2]-m[2]*H[1]))*one_o_m_squared;
+          //     + GW1z[cell]*sigma_para
+//               - mm::alpha_perp[cell]*(m[0]*(m[2]*GW2t[0]-m[0]*GW2t[2])-m[1]*(m[1]*GW2t[2]-m[2]*GW2t[1]))*one_o_m_squared*sigma_perp;
 
-      x_heun_array[cell] = xyz[0];
+    x_heun_array[cell] = xyz[0];
    	y_heun_array[cell] = xyz[1];
    	z_heun_array[cell] = xyz[2];
 
@@ -354,7 +354,6 @@ int LLB( std::vector <int> local_cell_array,
    	 x_array[cell] = x_initial_spin_array[cell] + 0.5*dt*(x_euler_array[cell] + x_heun_array[cell]);
    	 y_array[cell] = y_initial_spin_array[cell] + 0.5*dt*(y_euler_array[cell] + y_heun_array[cell]);
    	 z_array[cell] = z_initial_spin_array[cell] + 0.5*dt*(z_euler_array[cell] + z_heun_array[cell]);
-
    	//convert from M/Ms to J/T
    	cells::mag_array_x[cell] = x_array[cell]*mm::ms[cell];
    	cells::mag_array_y[cell] = y_array[cell]*mm::ms[cell];
@@ -371,7 +370,6 @@ int LLB( std::vector <int> local_cell_array,
    	MPI_Allreduce(MPI_IN_PLACE, &y_array[0],     num_cells,    MPI_DOUBLE,    MPI_SUM, MPI_COMM_WORLD);
    	MPI_Allreduce(MPI_IN_PLACE, &z_array[0],     num_cells,    MPI_DOUBLE,    MPI_SUM, MPI_COMM_WORLD);
    #endif
-
 
    //update atom positions
    if (discretisation_type == 2 || sim::time%vout::output_rate -1){

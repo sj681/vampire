@@ -56,15 +56,16 @@ namespace micromagnetic{
             else chi[cell] = (1.1*1.4/660.*Tc[cell])/(4*PI)/(T-Tc[cell]);
 
             //conversion from CGS to SI plus a small factor to stop the sum being less than 0
-            chi[cell] = 1.0/(chi[cell]*9.54393845712027+0.308e-14 + 0.03);
+            chi[cell] = 1.0/(chi[cell]*9.54393845712027 + 0.01);
             if (chi[cell] < 0) {
                std::cout << "error" << '\t' << Tc[cell] << '\t' << chi[cell] <<std::endl;
-               std::cin.get();
+
             }
          }
          #ifdef MPICF
             MPI_Allreduce(MPI_IN_PLACE, &chi[0],     num_cells,    MPI_DOUBLE,    MPI_SUM, MPI_COMM_WORLD);
          #endif
+
 
          return chi;            //returns the 1D vector for the susceptability,
       }
