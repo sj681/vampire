@@ -380,8 +380,7 @@ int LLB( std::vector <int> local_cell_array,
          atoms::y_spin_array[atom] = y_array[cell];
          atoms::z_spin_array[atom] = z_array[cell];
       }
-    }
-
+   }
 
 	return 0;
 

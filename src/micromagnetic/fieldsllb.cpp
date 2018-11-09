@@ -11,16 +11,24 @@
 //
 
 // Vampire headers
-#include "micromagnetic.hpp"
 #include "cells.hpp"
+<<<<<<< HEAD
 #include "internal.hpp"
 #include "../cells/internal.hpp"
 #include <stdlib.h>
 #include <vector>
+=======
+#include "dipole.hpp"
+>>>>>>> richard/environment
 #include "errors.hpp"
-#include "cells.hpp"
-#include "vio.hpp"
 #include "environment.hpp"
+#include "random.hpp"
+#include "sim.hpp"
+#include "vio.hpp"
+
+// micromagnetic module headers
+#include "micromagnetic.hpp"
+#include "internal.hpp"
 
 namespace micromagnetic{
 
@@ -115,18 +123,25 @@ namespace micromagnetic{
 
 
       //Sum H = H_exch + H_A +H_exch_grains +H_App + H+dip
-      spin_field[0] = pf*m[0] + exchange_field[0] + pinning_field_x[cell] + ext_field[0] - one_o_chi_perp[cell]*m[0] + cells::field_array_x[cell];// + ext_field[0] + exchange_field[0];// + pinning_field_x[cell];// + cells::field_array_x[cell];
-      spin_field[1] = pf*m[1] + exchange_field[1] + pinning_field_y[cell] + ext_field[1] - one_o_chi_perp[cell]*m[1] + cells::field_array_y[cell];// + ext_field[1] + exchange_field[1];// + pinning_field_y[cell];// + cells::field_array_y[cell];
-      spin_field[2] = pf*m[2] + exchange_field[2] + pinning_field_z[cell] + ext_field[2]                             + cells::field_array_z[cell];// + ext_field[2] + exchange_field[2];// + pinning_field_z[cell];// + cells::field_array_z[cell];
+      spin_field[0] = pf*m[0] + exchange_field[0] + pinning_field_x[cell] + ext_field[0] - one_o_chi_perp[cell]*m[0];// + ext_field[0] + exchange_field[0];// + pinning_field_x[cell];// + cells::field_array_x[cell];
+      spin_field[1] = pf*m[1] + exchange_field[1] + pinning_field_y[cell] + ext_field[1] - one_o_chi_perp[cell]*m[1];// + ext_field[1] + exchange_field[1];// + pinning_field_y[cell];// + cells::field_array_y[cell];
+      spin_field[2] = pf*m[2] + exchange_field[2] + pinning_field_z[cell] + ext_field[2]                            ;// + ext_field[2] + exchange_field[2];// + pinning_field_z[cell];// + cells::field_array_z[cell];
 
       //if environment is enabled add the environment field.
+      if (environment::enabled){
+         spin_field[0] = spin_field[0] + environment::environment_field_x[cell];
+         spin_field[1] = spin_field[1] + environment::environment_field_y[cell];
+         spin_field[2] = spin_field[2] + environment::environment_field_z[cell];
+      }
 
-      // if (environment::enabled){
-      //    spin_field[0] = spin_field[0] + environment::environment_field_x[cell];
-      //    spin_field[1] = spin_field[1] + environment::environment_field_y[cell];
-      //    spin_field[2] = spin_field[2] + environment::environment_field_z[cell];
-      // }
+      // Add dipole field if enabled
+      if (dipole::activated){
+         spin_field[0] += dipole::cells_field_array_x[cell];
+         spin_field[1] += dipole::cells_field_array_x[cell];
+         spin_field[2] += dipole::cells_field_array_x[cell];
+      }
 
+      //std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
       return spin_field;
    }
 

@@ -58,8 +58,8 @@ namespace micromagnetic{
             //conversion from CGS to SI plus a small factor to stop the sum being less than 0
             chi[cell] = 1.0/(chi[cell]*9.54393845712027 + 0.01);
             if (chi[cell] < 0) {
-               std::cout << "error" << '\t' << Tc[cell] << '\t' << chi[cell] <<std::endl;
-
+               std::cout << "Error: Negative parallel susceptibility in micromagnetic initialistion" << '\t' << Tc[cell] << '\t' << chi[cell] <<std::endl;
+               std::cin.get();
             }
          }
          #ifdef MPICF
