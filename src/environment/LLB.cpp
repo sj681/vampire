@@ -114,7 +114,6 @@ namespace environment{
       double Hz,
       double dt){
 
-
          using namespace LLB_arrays;
          //updating the cell magnetisation (in parallel)
          if (micromagnetic::discretisation_type == 0) cells::mag();
@@ -147,6 +146,7 @@ namespace environment{
             x_array[cell] = env::x_mag_array[cell]*iMs;
             y_array[cell] = env::y_mag_array[cell]*iMs;
             z_array[cell] = env::z_mag_array[cell]*iMs;
+            std::cout << cell << "\t" << iMs << '\t' << env::x_mag_array[cell] << '\t' << env::y_mag_array[cell] << '\t' <<  x_array[cell] << '\t' << y_array[cell] << '\t' << z_array[cell] <<std::endl;
             x_initial_spin_array[cell] = x_array[cell];
             y_initial_spin_array[cell] = y_array[cell];
             z_initial_spin_array[cell] = z_array[cell];
@@ -195,6 +195,7 @@ namespace environment{
             m[2] = z_array[cell];
 
             spin_field = env::calculate_llb_fields(m, temperature, cell, x_array,y_array,z_array);
+            //std::cout << spin_field[0] << '\t' << spin_field[1] << '\t' << spin_field[2] <<std::endl;
 
             //calcualte the noise terms
             double sigma_para = sqrt(2*kB*temperature*env::alpha_para/(env::Ms*dt));

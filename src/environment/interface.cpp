@@ -106,7 +106,7 @@ namespace environment{
       if(word==test){
          double exc=atof(value.c_str());
          // allowable values 0 - 1e-9 J/m == 1e-19 J/Angstrom
-         vin::check_for_valid_positive_value(exc, word, line, prefix, unit, "exchange", 0, 1e-19 ,"input","0 - 1e-19");
+         vin::check_for_valid_positive_value(exc, word, line, prefix, unit, "exchange", 0, 1.0e-9 ,"input","0 - 1e-9");
          env::A =-exc;
 
          return true;

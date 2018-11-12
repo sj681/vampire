@@ -170,6 +170,7 @@ namespace environment{
       int output();
 
       bool in_shield(double x, double y, double z);
+      int bias_shields();
 
       std::vector<double> calculate_llb_fields(std::vector <double>& m,
                                                double temperature,

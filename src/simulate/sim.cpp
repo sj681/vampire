@@ -622,7 +622,11 @@ void integrate_serial(uint64_t n_steps){
    if(err::check==true) std::cout << "sim::integrate_serial has been called" << std::endl;
 
    // if simulation is micromagnetic
-   if (micromagnetic::enabled) micromagnetic::multiscale_simulation_steps(n_steps);
+   if (micromagnetic::enabled) {
+		 micromagnetic::multiscale_simulation_steps(n_steps);
+		 if (environment::enabled && (sim::time)%environment::num_atomic_steps_env ==0)
+				 environment::LLB(sim::temperature, sim::H_applied,sim::H_vec[0],sim::H_vec[1],sim::H_vec[2],mp::dt);
+			 }
 
    //else simulation is atomistic
    else{
@@ -637,9 +641,9 @@ void integrate_serial(uint64_t n_steps){
             // Otherwise use CPU version
             else sim::LLG_Heun();
             // Integrate environment here (needs to be refactored into env module)
-				if (environment::enabled && (sim::time)%environment::num_atomic_steps_env ==0){
+						if (environment::enabled && (sim::time)%environment::num_atomic_steps_env ==0)
                environment::LLB(sim::temperature, sim::H_applied,sim::H_vec[0],sim::H_vec[1],sim::H_vec[2],mp::dt);
-            }
+
             // Increment time
             increment_time();
          }

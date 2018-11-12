@@ -12,14 +12,8 @@
 
 // Vampire headers
 #include "cells.hpp"
-<<<<<<< HEAD
 #include "internal.hpp"
-#include "../cells/internal.hpp"
-#include <stdlib.h>
-#include <vector>
-=======
 #include "dipole.hpp"
->>>>>>> richard/environment
 #include "errors.hpp"
 #include "environment.hpp"
 #include "random.hpp"
@@ -70,7 +64,7 @@ namespace micromagnetic{
 
       if (temperature < 0.1){
         m_e[cell] = 1.0;
-        alpha_para[cell] = alpha[cell]*0.1/Tc[cell];
+        alpha_para[cell] = 0.001;
       }
 
       //m and me are usually used squared
@@ -87,6 +81,7 @@ namespace micromagnetic{
       //array to store the exchanege field
       double Ac;
       double exchange_field[3]={0.0,0.0,0.0};
+      int mat  = cell_material_array[cell];
       if (num_cells > 1){
 
          //loops over all other cells with interactions to this cell
@@ -99,7 +94,7 @@ namespace micromagnetic{
             const double mj = sqrt(x_array[cellj]*x_array[cellj] + y_array[cellj]*y_array[cellj] + z_array[cellj]*z_array[cellj]);
 
 
-            int mat  = cell_material_array[cell];
+
             int matj =cell_material_array[cellj];
             Ac = A[j]*pow(mj,1.66);
             if (mp::material[mat].enable_SAF == true && mp::material[matj].enable_SAF == true){
@@ -119,8 +114,6 @@ namespace micromagnetic{
 
          }
       }
-   //   std::cin.get();
-
 
       //Sum H = H_exch + H_A +H_exch_grains +H_App + H+dip
       spin_field[0] = pf*m[0] + exchange_field[0] + pinning_field_x[cell] + ext_field[0] - one_o_chi_perp[cell]*m[0];// + ext_field[0] + exchange_field[0];// + pinning_field_x[cell];// + cells::field_array_x[cell];
@@ -129,6 +122,7 @@ namespace micromagnetic{
 
       //if environment is enabled add the environment field.
       if (environment::enabled){
+        //std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
          spin_field[0] = spin_field[0] + environment::environment_field_x[cell];
          spin_field[1] = spin_field[1] + environment::environment_field_y[cell];
          spin_field[2] = spin_field[2] + environment::environment_field_z[cell];
@@ -141,7 +135,7 @@ namespace micromagnetic{
          spin_field[2] += dipole::cells_field_array_x[cell];
       }
 
-      //std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
+      std::cout <<"MM" << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
       return spin_field;
    }
 

@@ -100,12 +100,13 @@ namespace environment{
          env::num_cells = env::num_cells_x*env::num_cells_y*env::num_cells_z;
          env::cell_volume = env::cell_size[0]*env::cell_size[1]*env::cell_size[2];
 
-         std::cout << "Number of environment cells: " << env::num_cells << std::endl;
+        // std::cout << "Number of environment cells: " << env::num_cells << std::endl;
 
          //convert Ms from input to Ms = ms.V and Ku = ku.V
 
          env::Ms = env::Ms*env::cell_volume;
          env::ku = -env::ku*env::cell_volume;
+         std::cout << "Number of environment cells: " << env::num_cells <<  "\t" << env::Ms << '\t' << env::ku << std::endl;
 
          //resize arrays
          env::x_mag_array.resize(env::num_cells,0.0);
@@ -131,12 +132,12 @@ namespace environment{
          environment_field_z.resize(cells::num_cells,0.0);
 
          //stores the max and min coordinates of all env cells
-         std::vector <double > x_max(env::num_cells,0.0);
-         std::vector <double > y_max(env::num_cells,0.0);
-         std::vector <double > z_max(env::num_cells,0.0);
-         std::vector <double > x_min(env::num_cells,0.0);
-         std::vector <double > y_min(env::num_cells,0.0);
-         std::vector <double > z_min(env::num_cells,0.0);
+         std::vector < double > x_max(env::num_cells,0.0);
+         std::vector < double > y_max(env::num_cells,0.0);
+         std::vector < double > z_max(env::num_cells,0.0);
+         std::vector < double > x_min(env::num_cells,0.0);
+         std::vector < double > y_min(env::num_cells,0.0);
+         std::vector < double > z_min(env::num_cells,0.0);
 
 
          //calculates the minimum and maximum positions of each cell for calcualtions of which cell the atomistic atoms are in later
@@ -224,6 +225,7 @@ namespace environment{
          // better to store x,y,z cell associations and calculate neighbours directly - RE
          int array_index = 0;
          for (int celli = 0; celli < env::num_cells; celli ++){
+
             double xi = env::cell_coords_array_x[celli];
             double yi = env::cell_coords_array_y[celli];
             double zi = env::cell_coords_array_z[celli];
@@ -255,12 +257,13 @@ namespace environment{
          //calcualtes me
          double m_e = pow((env::Tc-sim::temperature)/(env::Tc),0.365);
 
+
          //adds all cells which are not within the atomistic section to the the none atomsitic cells list or the atomistic cells list
          for (int cell = 0; cell < env::num_cells; cell++){
 
             // calculate if cell is part of shield structure
             bool included = true;//internal::in_shield(env::cell_coords_array_x[cell], env::cell_coords_array_y[cell], env::cell_coords_array_z[cell]);
-
+          //  int sheild = env::bias_shields();
             //std::cout << env::shift[0] << '\t' << env::cell_coords_array_y[cell] << '\t' << env::shift[2] << '\t' << env_size_x << '\t' << env_size_y << '\t' << env_size_z << '\t' << std::endl;
             if (env::shift[0] < 0 && env::cell_coords_array_x[cell] < -env::shift[0]) included = false;
             else if (env::shift[0] >= 0 && env::cell_coords_array_x[cell] > env_size_x + 15)  included = false;
@@ -309,15 +312,16 @@ namespace environment{
                  env::y_mag_array[cell] = env::initial_spin[1]*env::Ms;
                  env::z_mag_array[cell] = env::initial_spin[2]*env::Ms;
 
+
             }
          }
 
          std::ofstream mfile;
          mfile.open("m3.txt");
 
-         for (int cell = 0; cell < cells::num_cells; cell++)
-         mfile<< cells::pos_and_mom_array[4*cell+0] + env::shift[0]<< '\t' << cells::pos_and_mom_array[4*cell+1]  +env::shift[1]<< '\t' << cells::pos_and_mom_array[4*cell+2]+env::shift[2] << '\t' << cells::mag_array_x[cell] <<'\t' << cells::mag_array_y[cell] <<'\t' << cells::mag_array_z[cell] <<std::endl;
-
+         for (int cell = 0; cell < cells::num_cells; cell++){
+           mfile<< cells::pos_and_mom_array[4*cell+0] + env::shift[0]<< '\t' << cells::pos_and_mom_array[4*cell+1]  +env::shift[1]<< '\t' << cells::pos_and_mom_array[4*cell+2]+env::shift[2] << '\t' << cells::mag_array_x[cell] <<'\t' << cells::mag_array_y[cell] <<'\t' << cells::mag_array_z[cell] <<std::endl;
+         }
 
          //initalise the demag fields
          int a = env::initialise_demag_fields();

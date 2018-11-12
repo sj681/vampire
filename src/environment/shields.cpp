@@ -34,6 +34,7 @@ bool  in_x(double x, double z){
 
 }
 
+
 //------------------------------------------------------------------------------
 // Function to calculate basic shield geometry for reader
 //------------------------------------------------------------------------------
@@ -62,6 +63,14 @@ return true;
    //return false;
 
 }
+
+
+int bias_sheilds(){
+
+  return 0;
+
+}
+
 
 }
 

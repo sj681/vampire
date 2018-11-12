@@ -340,6 +340,7 @@ namespace environment{
                  dipole_field_x[cell] *= 9.27400915e-01;
                  dipole_field_y[cell] *= 9.27400915e-01;
                  dipole_field_z[cell] *= 9.27400915e-01;
+              //  std::cout << cell << '\t' << dipole_field_x[cell] << '\t' << dipole_field_y[cell] << '\t' << dipole_field_z[cell] <<std::endl;
                //  ofile << i << '\t' << j << '\t' << k << '\t' << dipole_field_x[cell] << '\t' << dipole_field_y[cell] << '\t' << dipole_field_z[cell] << '\t' << std::endl;
                   cell++;
                }
@@ -354,6 +355,7 @@ namespace environment{
             environment_field_x[cell] = dipole_field_x[env_cell];
             environment_field_y[cell] = dipole_field_y[env_cell];
             environment_field_z[cell] = dipole_field_z[env_cell];
+
             ofile << cells::pos_and_mom_array[4*cell+0] << '\t' << cells::pos_and_mom_array[4*cell+1] << '\t' << cells::pos_and_mom_array[4*cell+2] << '\t' << environment_field_x[cell] << '\t' << environment_field_y[cell] << '\t' <<environment_field_z[cell] << '\t' << std::endl;
 
          }
