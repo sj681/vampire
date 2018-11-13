@@ -32,9 +32,10 @@ namespace micromagnetic{
 
    extern bool enable_resistance;
    //initialises the lists of atomstic/micromagnetic atoms for multiscale simulations
-   extern std::vector < double > list_of_atomistic_atoms;
-   extern std::vector < double > list_of_none_atomistic_atoms;
-   extern std::vector < double > list_of_micromagnetic_cells;
+   extern std::vector <int> list_of_atomistic_atoms;
+   extern std::vector <int> list_of_none_atomistic_atoms;
+   extern std::vector <int> list_of_micromagnetic_cells;
+   extern std::vector <int> list_of_empty_micromagnetic_cells;
 
    //variables to store the numbers of atomistic/ microamgnetic atoms for multiscale simulations
    extern int number_of_atomistic_atoms;
@@ -92,21 +93,21 @@ namespace micromagnetic{
             double dt,
             std::vector <double> volume_array);
 
-    //micromagnetic LLG
-    int LLG( std::vector <int> local_cell_array,
-             int num_steps,
-             int num_cells,
-             int num_local_cells,
-             double temperature,
-             std::vector<double>& x_mag_array,
-             std::vector<double>& y_mag_array,
-             std::vector<double>& z_mag_array,
-             double Hx,
-             double Hy,
-             double Hz,
-             double H,
-             double dt,
-             std::vector <double> volume_array);
+   //micromagnetic LLG
+   int LLG( const std::vector<int>& local_cell_array,
+      const int num_steps,
+      const int num_cells,
+      const int num_local_cells,
+      const double temperature,
+      std::vector<double>& x_mag_array,
+      std::vector<double>& y_mag_array,
+      std::vector<double>& z_mag_array,
+      const double Hx,
+      const double Hy,
+      const double Hz,
+      const double H,
+      const double dt,
+      const std::vector<double>& volume_array);
 
    //-----------------------------------------------------------------------------
    // Function to initialise micromagnetic module

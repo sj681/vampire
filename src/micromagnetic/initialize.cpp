@@ -58,6 +58,8 @@ namespace micromagnetic{
       //--------------------------------------------------------------------
       if(micromagnetic::enabled == false ) return;
 
+      zlog << zTs() << "Initialising micromagnetic calculation..." << std::endl;
+
       //resizes the vectors used to store the cell parameters
       mm::A.resize(num_cells*num_cells,0.0);
       mm::alpha.resize(num_cells,0.0);
@@ -69,7 +71,7 @@ namespace micromagnetic{
       mm::Tc.resize(num_cells,0.0);
       mm::alpha_para.resize(num_cells,0.0);
       mm::alpha_perp.resize(num_cells,0.0);
-      mm::m_e.resize(num_cells,0.0);
+      mm::m_e.resize(num_cells,1.0); // initialise as fully magnetizated
       mm::macro_neighbour_list_start_index.resize(num_cells,0.0);
       mm::macro_neighbour_list_end_index.resize(num_cells,0.0);
       micromagnetic::cell_discretisation_micromagnetic.resize(num_cells,true);
@@ -78,6 +80,10 @@ namespace micromagnetic{
       mm::pinning_field_y.resize(num_cells,0.0);
       mm::pinning_field_z.resize(num_cells,0.0);
       mm::cell_material_array.resize(num_cells,0.0);
+
+      mm::thermal_field_array_x.resize(num_cells,0.0);
+      mm::thermal_field_array_y.resize(num_cells,0.0);
+      mm::thermal_field_array_z.resize(num_cells,0.0);
 
       // These functions vectors with the parameters calcualted from the function
       mm::ms =                   mm::calculate_ms(num_local_cells,num_atoms,num_cells, cell_array, type_array,material,local_cell_array);
@@ -140,13 +146,17 @@ namespace micromagnetic{
             }
          }
 
-         // if simualtion is micromagetic all cells are made micromagnetic cells
+         // if simulation is micromagetic all cells are made micromagnetic cells
          for (int lc = 0; lc < num_local_cells; lc++){
             int cell = local_cell_array[lc];
             // Check that cell is micromagnetic, has a reasonable moment and reasonable Curie temperature
             if (micromagnetic::cell_discretisation_micromagnetic[cell] == 1 && mm::ms[cell] > 1e-30 && mm::Tc[cell] > 0.1) {
                list_of_micromagnetic_cells.push_back(cell);
-               number_of_micromagnetic_cells ++;
+               number_of_micromagnetic_cells++;
+            }
+            // Otherwise list cells as non-magnetic (empty)
+            else{
+               list_of_empty_micromagnetic_cells.push_back(cell);
             }
          }
 
@@ -172,6 +182,10 @@ namespace micromagnetic{
                // update number of cells
                number_of_micromagnetic_cells ++;
 
+            }
+            // Otherwise list cells as non-magnetic (empty)
+            else{
+               list_of_empty_micromagnetic_cells.push_back(cell);
             }
 
          }
@@ -257,14 +271,24 @@ namespace micromagnetic{
     //    }
   //}
 
-     //boltzman stuff
-     P.resize(101);
-     for (int i = 0; i < 101; i++) P[i].resize(101,0.0);
+      //boltzman stuff
+      P.resize(101);
+      for (int i = 0; i < 101; i++) P[i].resize(101,0.0);
 
+      //--------------------------------------------
+      // print informative message to users
+      //--------------------------------------------
+      int total_micromagnetic_cells = number_of_micromagnetic_cells;
+      #ifdef MPICF
+         MPI_Allreduce(&number_of_micromagnetic_cells, &total_micromagnetic_cells, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+      #endif
 
-   //  std::cout << "initialize complete" << "\t" << mm::gamma[0] << '\t' << mm::alpha[0] << std::endl;
+      std::cout << "Micromagnetic initialisation complete" << std::endl;
+      zlog << zTs() << "Micromagnetic initialisation complete" << std::endl;
+      std::cout << "Number of micromagnetic cells (all CPUs): " << total_micromagnetic_cells << std::endl;
+      zlog << zTs() << "Number of micromagnetic cells: " << total_micromagnetic_cells << std::endl;
 
-     return;
+      return;
 
    }
 
