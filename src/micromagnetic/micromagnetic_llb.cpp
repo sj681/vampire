@@ -141,7 +141,6 @@ int LLB( std::vector <int> local_cell_array,
          std::vector <double> volume_array){
 
 
-
 	// check calling of routine if error checking is activated
 	if(err::check==true){std::cout << "micromagnetic::LLG_Heun has been called" << std::endl;}
 

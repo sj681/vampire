@@ -104,6 +104,7 @@ namespace micromagnetic{
 
       //stores the external fields (x,y,z)
       std::vector<double> ext_field;
+      std::vector<double> bias_field;
 
       //start and end index arrays for the neighbouring atoms for field calcualtions.
       std::vector<double> fields_neighbouring_atoms_begin;

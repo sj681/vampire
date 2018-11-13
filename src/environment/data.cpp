@@ -59,6 +59,9 @@ namespace environment{
       std::vector < double > initial_spin(3,0.0);
 
       std::vector < double > ext_field(3,0.0);
+      std::vector < double > bias_field_x;
+      std::vector < double > bias_field_y;
+      std::vector < double > bias_field_z;
 
       std::vector < double > dipole_field_x;
       std::vector < double > dipole_field_y;
@@ -164,6 +167,7 @@ namespace environment{
       std::vector < int > atomistic_cells;
       std::vector < int > list_env_cell_atomistic_cell;
       std::vector < int > env_cell_is_in_atomistic_region;
+
 
    } // end of internal namespace
 

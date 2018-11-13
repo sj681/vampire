@@ -46,6 +46,9 @@ namespace environment{
       extern std::vector < double > cell_size;
       extern std::vector < double > initial_spin;
       extern std::vector < double > ext_field;
+      extern std::vector < double > bias_field_x;
+      extern std::vector < double > bias_field_y;
+      extern std::vector < double > bias_field_z;
 
 
       extern std::vector < double > dipole_field_x;

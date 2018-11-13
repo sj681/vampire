@@ -113,6 +113,10 @@ namespace environment{
          env::y_mag_array.resize(env::num_cells,0.0);
          env::z_mag_array.resize(env::num_cells,0.0);
 
+         env::bias_field_x.resize(env::num_cells,0.0);
+         env::bias_field_y.resize(env::num_cells,0.0);
+         env::bias_field_z.resize(env::num_cells,0.0);
+
          env::cell_coords_array_x.resize(env::num_cells,0.0);
          env::cell_coords_array_y.resize(env::num_cells,0.0);
          env::cell_coords_array_z.resize(env::num_cells,0.0);
@@ -253,6 +257,9 @@ namespace environment{
             }
          }
 
+         internal::bias_shields();
+         std::cin.get();
+         
 
          //calcualtes me
          double m_e = pow((env::Tc-sim::temperature)/(env::Tc),0.365);
@@ -263,7 +270,9 @@ namespace environment{
 
             // calculate if cell is part of shield structure
             bool included = true;//internal::in_shield(env::cell_coords_array_x[cell], env::cell_coords_array_y[cell], env::cell_coords_array_z[cell]);
-          //  int sheild = env::bias_shields();
+
+
+
             //std::cout << env::shift[0] << '\t' << env::cell_coords_array_y[cell] << '\t' << env::shift[2] << '\t' << env_size_x << '\t' << env_size_y << '\t' << env_size_z << '\t' << std::endl;
             if (env::shift[0] < 0 && env::cell_coords_array_x[cell] < -env::shift[0]) included = false;
             else if (env::shift[0] >= 0 && env::cell_coords_array_x[cell] > env_size_x + 15)  included = false;

@@ -74,6 +74,7 @@ namespace micromagnetic{
       //stores the external fields (x,y,z)
       extern std::vector<double> ext_field;
 
+
       //stores the neighbour list for calculating A
       extern std::vector<double> macro_neighbour_list_start_index;
       extern std::vector<double> macro_neighbour_list_end_index;

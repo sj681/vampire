@@ -101,7 +101,6 @@ namespace environment{
       GW2y.resize(num_cells,0.0);
       GW2z.resize(num_cells,0.0);
 
-
       LLG_set=true;
 
       return EXIT_SUCCESS;
@@ -113,6 +112,8 @@ namespace environment{
       double Hy,
       double Hz,
       double dt){
+
+
 
          using namespace LLB_arrays;
          //updating the cell magnetisation (in parallel)
@@ -130,7 +131,7 @@ namespace environment{
 
          // Check for initialisation of LLG integration arrays
          if(LLG_set== false) environment::LLB_init(num_cells);
-         // Local variables for system integration
+         //Local variables for system integration
          const double iMs = 1.0/env::Ms;
 
          //sets to 0 for the parallel processing
@@ -143,10 +144,11 @@ namespace environment{
          //save this new m as the initial value, so it can be saved and used in the final equation.
          for (int i = my_env_start_index; i < my_env_end_index; i++){
             int cell = env::none_atomistic_cells[i];
+          //std::cout << x_array[cell] << '\t' << y_array[cell] << '\t' <<z_array[cell] <<std::endl;
             x_array[cell] = env::x_mag_array[cell]*iMs;
             y_array[cell] = env::y_mag_array[cell]*iMs;
             z_array[cell] = env::z_mag_array[cell]*iMs;
-            std::cout << cell << "\t" << iMs << '\t' << env::x_mag_array[cell] << '\t' << env::y_mag_array[cell] << '\t' <<  x_array[cell] << '\t' << y_array[cell] << '\t' << z_array[cell] <<std::endl;
+          //std::cout << cell << "\t" << iMs << '\t' << env::x_mag_array[cell] << '\t' << env::y_mag_array[cell] << '\t' <<  x_array[cell] << '\t' << y_array[cell] << '\t' << z_array[cell] <<std::endl;
             x_initial_spin_array[cell] = x_array[cell];
             y_initial_spin_array[cell] = y_array[cell];
             z_initial_spin_array[cell] = z_array[cell];

@@ -116,14 +116,14 @@ void create_tracks(){
    const int start_z = -(track_parameters::num_bits_per_track*zb) + zb;
    const int end_z = (track_parameters::num_bits_per_track*zb) + zb;
 
-   std::cout << start_x << '\t' << end_x << '\t' << start_z << '\t' << end_z << std::endl;
+//   std::cout << start_x << '\t' << end_x << '\t' << start_z << '\t' << end_z << std::endl;
     for (int x = start_x; x < end_x; x = x + bs){
        for (double z = start_z; z < end_z; z = z + bw){
-          std::cout << z << "\t" << x << '\t' << bw <<  std::endl;
+  //        std::cout << z << "\t" << x << '\t' << bw <<  std::endl;
           track_parameters::x_track_array[bit] = x;
           track_parameters::z_track_array[bit] = z;
           track_parameters::bit_magnetisation[bit] = M;
-          std::cout << bit << '\t' <<  track_parameters::bit_magnetisation[bit] <<std::endl;
+    //      std::cout << bit << '\t' <<  track_parameters::bit_magnetisation[bit] <<std::endl;
           bit++;
 
       M = M*-1;
@@ -131,7 +131,7 @@ void create_tracks(){
        M = M*-1;
     }
 
-    std::cin.get();
+//    std::cin.get();
 }
 
 
@@ -169,7 +169,7 @@ std::vector <double > calculate_field(double cx, double cy, double cz, int step)
       double z = sqrt((z_cell - z_bit)*(z_cell - z_bit));
 
 
-      std::cout << "distance" << "\t" << z << "\t" << track_parameters::bit_magnetisation[bit] <<std::endl;
+      //std::cout << "distance" << "\t" << z << "\t" << track_parameters::bit_magnetisation[bit] <<std::endl;
       double Bx = 0.0;
       double By = 0.0;
       double Bz = 0.0;
@@ -198,9 +198,9 @@ std::vector <double > calculate_field(double cx, double cy, double cz, int step)
 
                 double r = sqrt(xp*xp + yp*yp + zp*zp);
 
-                Bx = Bx + track_parameters::bit_magnetisation[bit]*m1klm* log(zp + r);
-                By = By + track_parameters::bit_magnetisation[bit]*m1klm * sign(yp) * sign(xp) * atan(xabs * zp / (yabs * r));
-                Bz = Bz + track_parameters::bit_magnetisation[bit]*m1klm* log(xp + r);
+                Bx = Bx + track_parameters::bit_magnetisation[bit] * m1klm * log(zp + r);
+                By = By + track_parameters::bit_magnetisation[bit] * m1klm * sign(yp) * sign(xp) * atan(xabs * zp / (yabs * r));
+                Bz = Bz + track_parameters::bit_magnetisation[bit] * m1klm * log(xp + r);
 
 
              }
@@ -208,12 +208,12 @@ std::vector <double > calculate_field(double cx, double cy, double cz, int step)
       }
    std::cout <<"field1:\t" <<  Bx << '\t' <<  By <<std::endl;
    std::cout << "\t" << std::endl;
-      B[0] = Bx*prefactor;
-      B[1] = By*prefactor;
-      B[2] = Bz*prefactor;
+      B[0] = B[0] + Bx*prefactor;
+      B[1] = B[1] + By*prefactor;
+      B[2] = B[2] + Bz*prefactor;
 
    }
-   std::cout <<"\t\t\t\t\tfield:\t" <<  B[0] << '\t' <<  B[1] << '\t' << B[2] <<std::endl;
+   std::cout <<"\t\t\t\t\t field:\t" <<  B[0] << '\t' <<  B[1] << '\t' << B[2] <<std::endl;
 
    return B;
 

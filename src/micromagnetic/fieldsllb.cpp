@@ -37,6 +37,7 @@ namespace micromagnetic{
                                                std::vector<double>& z_array){
 
 
+
       //array to save the field to for each cell
       std::vector<double> spin_field(3,0.0);
 
@@ -93,8 +94,6 @@ namespace micromagnetic{
             const int cellj = macro_neighbour_list_array[j];
             const double mj = sqrt(x_array[cellj]*x_array[cellj] + y_array[cellj]*y_array[cellj] + z_array[cellj]*z_array[cellj]);
 
-
-
             int matj =cell_material_array[cellj];
             Ac = A[j]*pow(mj,1.66);
             if (mp::material[mat].enable_SAF == true && mp::material[matj].enable_SAF == true){
@@ -103,14 +102,12 @@ namespace micromagnetic{
                  double Area = cells::macro_cell_size[0]*cells::macro_cell_size[1];
                  Ac = -pow(mj,1.66)*Area*mp::material[mat].SAF[matj]/ms[cell];
                 //if (mm_correction == true) Ac = 2*Ac/cells::macro_cell_size[2];
-
               }
            }
 
            exchange_field[0] = -Ac*(x_array[cellj] - x_array[cell]);
            exchange_field[1] = -Ac*(y_array[cellj] - y_array[cell]);
            exchange_field[2] = -Ac*(z_array[cellj] - z_array[cell]);
-
 
          }
       }
@@ -122,18 +119,18 @@ namespace micromagnetic{
 
       //if environment is enabled add the environment field.
       if (environment::enabled){
-        //std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
+        std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
          spin_field[0] = spin_field[0] + environment::environment_field_x[cell];
          spin_field[1] = spin_field[1] + environment::environment_field_y[cell];
          spin_field[2] = spin_field[2] + environment::environment_field_z[cell];
       }
 
       // Add dipole field if enabled
-      if (dipole::activated){
-         spin_field[0] += dipole::cells_field_array_x[cell];
-         spin_field[1] += dipole::cells_field_array_x[cell];
-         spin_field[2] += dipole::cells_field_array_x[cell];
-      }
+      // if (dipole::activated){
+      //    spin_field[0] += dipole::cells_field_array_x[cell];
+      //    spin_field[1] += dipole::cells_field_array_x[cell];
+      //    spin_field[2] += dipole::cells_field_array_x[cell];
+      // }
 
       std::cout <<"MM" << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
       return spin_field;
