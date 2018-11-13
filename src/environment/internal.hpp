@@ -154,7 +154,8 @@ namespace environment{
       extern int num_cells_z;
 
       extern int eight_num_cells;
-
+      extern double one_o_eight_cells;
+      extern double one_o_muB;
 
       extern std::vector < int > none_atomistic_cells;
       extern std::vector < int > atomistic_cells;

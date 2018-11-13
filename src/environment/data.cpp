@@ -162,6 +162,8 @@ namespace environment{
       int num_cells_z;
 
       int eight_num_cells;
+      double one_o_eight_cells;
+      double one_o_muB;
 
       std::vector < int > none_atomistic_cells;
       std::vector < int > atomistic_cells;

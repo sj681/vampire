@@ -108,7 +108,6 @@ namespace micromagnetic{
            exchange_field[0] = -Ac*(x_array[cellj] - x_array[cell]);
            exchange_field[1] = -Ac*(y_array[cellj] - y_array[cell]);
            exchange_field[2] = -Ac*(z_array[cellj] - z_array[cell]);
-
          }
       }
 
@@ -119,7 +118,7 @@ namespace micromagnetic{
 
       //if environment is enabled add the environment field.
       if (environment::enabled){
-        std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
+      //  std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
          spin_field[0] = spin_field[0] + environment::environment_field_x[cell];
          spin_field[1] = spin_field[1] + environment::environment_field_y[cell];
          spin_field[2] = spin_field[2] + environment::environment_field_z[cell];
@@ -132,7 +131,7 @@ namespace micromagnetic{
       //    spin_field[2] += dipole::cells_field_array_x[cell];
       // }
 
-      std::cout <<"MM" << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
+    //  std::cout <<"MM" << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
       return spin_field;
    }
 

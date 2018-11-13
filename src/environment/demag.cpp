@@ -31,8 +31,10 @@ namespace environment{
          //only complie this section of FFT is enabled else don't
          #ifdef FFT
          //save eight times number cells and 8 pi/3V to use later.
-         eight_num_cells = 8*num_cells_x*num_cells_y*num_cells_z;
+         eight_num_cells = (8*num_cells_x*num_cells_y*num_cells_z);
          eightPI_three_cell_volume = 8.0*M_PI/(3.0*cell_volume);
+         one_o_muB  =1.0/9.27400915e-24;
+         one_o_eight_cells = 9.27400915e-01/eight_num_cells;
 
          //Resize arrays for fft
          N2xx =  (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * eight_num_cells);
@@ -256,8 +258,9 @@ namespace environment{
                }
             }
          }
-         std::ofstream pfile;
-         pfile.open("m.txt");
+
+      //   std::ofstream pfile;
+      //   pfile.open("m.txt");
          //initialised the in components for the FT to the magnetisation of each cell
          int cell = 0;
          for (int i=0 ; i<num_cells_x; i++){
@@ -266,10 +269,10 @@ namespace environment{
                   int id = (2*i*num_cells_y+j)*2*num_cells_z+k;
 
                //   std::cout << x_mag_array[cell] << '\t' << y_mag_array[cell] << '\t' << z_mag_array[cell] << std::endl;
-                  Mx_in[id][0] = x_mag_array[cell]/9.27400915e-24;
-                  My_in[id][0] = y_mag_array[cell]/9.27400915e-24;
-                  Mz_in[id][0] = z_mag_array[cell]/9.27400915e-24;
-                  pfile <<cell << '\t' << i << '\t' << j << '\t' << k << "\t" <<  x_mag_array[cell] << '\t' << y_mag_array[cell] << '\t' <<z_mag_array[cell] << std::endl;
+                  Mx_in[id][0] = x_mag_array[cell]*one_o_muB;
+                  My_in[id][0] = y_mag_array[cell]*one_o_muB;
+                  Mz_in[id][0] = z_mag_array[cell]*one_o_muB;
+            //      pfile <<cell << '\t' << i << '\t' << j << '\t' << k << "\t" <<  x_mag_array[cell] << '\t' << y_mag_array[cell] << '\t' <<z_mag_array[cell] << std::endl;
                   cell++;
                }
             }
@@ -319,13 +322,13 @@ namespace environment{
          for (int i = 0; i< num_cells; i++){
 
             // Add self-demagnetisation as mu_0/4_PI * 8PI/3V
-            dipole_field_x[i]=eightPI_three_cell_volume*(x_mag_array[i]/9.27400915e-24);
-            dipole_field_y[i]=eightPI_three_cell_volume*(y_mag_array[i]/9.27400915e-24);
-            dipole_field_z[i]=eightPI_three_cell_volume*(z_mag_array[i]/9.27400915e-24);
+            dipole_field_x[i]=0;//eightPI_three_cell_volume*(x_mag_array[i]/9.27400915e-24);
+            dipole_field_y[i]=0;//eightPI_three_cell_volume*(y_mag_array[i]/9.27400915e-24);
+            dipole_field_z[i]=0;//eightPI_three_cell_volume*(z_mag_array[i]/9.27400915e-24);
          }
 
-         std::ofstream ofile;
-         ofile.open("field.txt");
+    //     std::ofstream ofile;
+      //   ofile.open("field.txt");
 
          //sums the dipole field N.m + self demag/eightnumcells
          cell = 0;
@@ -334,14 +337,11 @@ namespace environment{
                for (int k=0 ; k<num_cells_z ; k++){
                   int id = (2*i*num_cells_y+j)*2*num_cells_z+k;
                //   std:: cout << dipole_field_x[cell] << '\t' << dipole_field_y[cell] << '\t' << dipole_field_z[cell] << '\t' << Hx_out[id][0] << '\t' << Hy_out[id][0] << '\t' << Hz_out[id][0] << std::endl;
-                 dipole_field_x[cell] += Hx_out[id][0]/eight_num_cells;
-                 dipole_field_y[cell] += Hy_out[id][0]/eight_num_cells;
-                 dipole_field_z[cell] += Hz_out[id][0]/eight_num_cells;
-                 dipole_field_x[cell] *= 9.27400915e-01;
-                 dipole_field_y[cell] *= 9.27400915e-01;
-                 dipole_field_z[cell] *= 9.27400915e-01;
+                 dipole_field_x[cell] += Hx_out[id][0]*one_o_eight_cells;
+                 dipole_field_y[cell] += Hy_out[id][0]*one_o_eight_cells;
+                 dipole_field_z[cell] += Hz_out[id][0]*one_o_eight_cells;
               //  std::cout << cell << '\t' << dipole_field_x[cell] << '\t' << dipole_field_y[cell] << '\t' << dipole_field_z[cell] <<std::endl;
-               //  ofile << i << '\t' << j << '\t' << k << '\t' << dipole_field_x[cell] << '\t' << dipole_field_y[cell] << '\t' << dipole_field_z[cell] << '\t' << std::endl;
+            //      ofile << cell << '\t' << i << '\t' << j << '\t' << k << '\t' << dipole_field_x[cell] << '\t' << dipole_field_y[cell] << '\t' << dipole_field_z[cell] << '\t' <<x_mag_array[cell] << '\t' << y_mag_array[cell] << '\t' <<z_mag_array[cell] << std::endl;
                   cell++;
                }
             }
@@ -355,8 +355,6 @@ namespace environment{
             environment_field_x[cell] = dipole_field_x[env_cell];
             environment_field_y[cell] = dipole_field_y[env_cell];
             environment_field_z[cell] = dipole_field_z[env_cell];
-
-            ofile << cells::pos_and_mom_array[4*cell+0] << '\t' << cells::pos_and_mom_array[4*cell+1] << '\t' << cells::pos_and_mom_array[4*cell+2] << '\t' << environment_field_x[cell] << '\t' << environment_field_y[cell] << '\t' <<environment_field_z[cell] << '\t' << std::endl;
 
          }
    //      //end the FFT only compilation

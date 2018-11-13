@@ -93,24 +93,26 @@ namespace environment
                   const double ECy = aT*Acy;
                   const double ECz = aT*Acz;
                   //calcualtes the exchange field from i to j
-                  exchange_field[0] -= ECx*(x_array[cellj] - x_array[cell]);
-                  exchange_field[1] -= ECy*(y_array[cellj] - y_array[cell]);
-                  exchange_field[2] -= ECz*(z_array[cellj] - z_array[cell]);
+                  exchange_field[0] += ECx*(x_array[cellj] - x_array[cell]);
+                  exchange_field[1] += ECy*(y_array[cellj] - y_array[cell]);
+                  exchange_field[2] += ECz*(z_array[cellj] - z_array[cell]);
               //   std::cout << Ar << '\t' << aT << '\t' << Acx << '\t' << x_array[cellj] - x_array[cell] << "\t" << exchange_field[0] << std::endl;
 
                }
             }
 
             //Sum H = H_exch + H_A +H_exch_grains +H_App + H+dip
-            spin_field[0] = pf*m[0]  - one_o_chi_perp*m[0]  + bias_field_x[cell];// + dipole_field_x[cell];// + env_field_uv[0];
-            spin_field[1] = pf*m[1]  - one_o_chi_perp*m[1]  + bias_field_y[cell];// + dipole_field_y[cell];// + env_field_uv[1];
-            spin_field[2] = pf*m[2]                         + bias_field_z[cell];// + dipole_field_z[cell];// + env_field_uv[2];
+            spin_field[0] = pf*m[0] + bias_field_x[cell] + dipole_field_x[cell] + env_field_uv[0];//
+            spin_field[1] = pf*m[1] + bias_field_y[cell] + dipole_field_y[cell] + env_field_uv[1];//
+            spin_field[2] = pf*m[2] + bias_field_z[cell] + dipole_field_z[cell] + env_field_uv[2];//
 
-              // std::cout << "x" << '\t' << pf  << '\t' << m[0] << '\t' << bias_field_x[cell] << "\t" << dipole_field_x[cell] << "\t" << spin_field[0] <<std::endl;
-              // std::cout << "y" << '\t' << pf  << '\t' << m[1] << '\t' << bias_field_y[cell] << "\t" << dipole_field_y[cell] << "\t" << spin_field[1] <<std::endl;
-              // std::cout << "z" << '\t' << pf  << '\t' << m[2] << '\t' << bias_field_z[cell] << "\t" << dipole_field_z[cell] << "\t" << spin_field[2] <<std::endl;
-              //
-              // std::cout << "total" << '\t' << spin_field[0]  << '\t' << spin_field[1] << "\t" << spin_field[2] <<std::endl;
+//            std::cout << A << '\t' <<  Ms << '\t' << spin_field[0] << '\t' << exchange_field[0] << '\t' <<  spin_field[1] << '\t' << exchange_field[1] << '\t' <<  spin_field[2] << '\t' << exchange_field[2] << '\t' << std::endl;
+
+          //     std::cout << "x" << '\t' << pf << '\t' << m[0] << '\t' << bias_field_x[cell] << "\t" << dipole_field_x[cell] << "\t" << spin_field[0] <<std::endl;
+            //   std::cout << "y" << '\t' << pf << '\t' << m[1] << '\t' << bias_field_y[cell] << "\t" << dipole_field_y[cell] << "\t" << spin_field[1] <<std::endl;
+              // std::cout << "z" << '\t' << pf << '\t' << m[2] << '\t' << bias_field_z[cell] << "\t" << dipole_field_z[cell] << "\t" << spin_field[2] <<std::endl;
+
+            //   std::cout << "total" << '\t' << m[0]  << '\t' << m[1] << "\t" << m[2] <<std::endl;
               if (spin_field[0] != spin_field[0] ){
                 std::cout <<cell << "\t" << spin_field[0] << '\t' <<m[0] << '\t' << pf << '\t' << exchange_field[0] << '\t' <<  dipole_field_x[cell] << std::endl;
                 std::cin.get();}

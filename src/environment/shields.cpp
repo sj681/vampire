@@ -76,7 +76,7 @@ return true;
 
 int bias_shields(){
 
-  double shield_Ms = 100;
+  double shield_Ms = 1;
   double x_size = 1000000;
   double y_size = dim[1];
   double z_size = dim[2];

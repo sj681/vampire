@@ -212,7 +212,6 @@ namespace environment{
             }
          }
 
-
          // std::ofstream pfile;
          // pfile.open("m2.txt");
          //
@@ -259,7 +258,7 @@ namespace environment{
 
          internal::bias_shields();
          std::cin.get();
-         
+
 
          //calcualtes me
          double m_e = pow((env::Tc-sim::temperature)/(env::Tc),0.365);
@@ -325,22 +324,11 @@ namespace environment{
             }
          }
 
-         std::ofstream mfile;
-         mfile.open("m3.txt");
-
-         for (int cell = 0; cell < cells::num_cells; cell++){
-           mfile<< cells::pos_and_mom_array[4*cell+0] + env::shift[0]<< '\t' << cells::pos_and_mom_array[4*cell+1]  +env::shift[1]<< '\t' << cells::pos_and_mom_array[4*cell+2]+env::shift[2] << '\t' << cells::mag_array_x[cell] <<'\t' << cells::mag_array_y[cell] <<'\t' << cells::mag_array_z[cell] <<std::endl;
-         }
 
          //initalise the demag fields
          int a = env::initialise_demag_fields();
 
-         std::ofstream pfile;
-         pfile.open("m2.txt");
 
-         for (int cell = 0; cell < env::num_cells; cell++){
-            pfile << cell << "\t" << env::cell_coords_array_x[cell]<< "\t" << env::cell_coords_array_y[cell]<< "\t" << env::cell_coords_array_z[cell]  <<  "\t" <<  env::x_mag_array[cell] << '\t' << env::y_mag_array[cell] << '\t' << env::z_mag_array[cell] <<std::endl;
-          }
 
          return;
 

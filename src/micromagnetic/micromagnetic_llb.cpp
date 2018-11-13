@@ -397,7 +397,7 @@ int LLB( std::vector <int> local_cell_array,
    #endif
 
    //update atom positions (what happens for multiscale - are mm cells not updated?)
-   if (discretisation_type == 2 || sim::time%vout::output_rate -1){
+   if (sim::time%vout::output_rate -1){
       for(int atom_list=0;atom_list<number_of_none_atomistic_atoms;atom_list++){
          int atom = list_of_none_atomistic_atoms[atom_list];
          int cell = cells::atom_cell_id_array[atom];

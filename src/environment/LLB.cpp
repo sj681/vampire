@@ -155,6 +155,8 @@ namespace environment{
          }
 
 
+
+
          const double kB = 1.3806503e-23;
          std::vector<double> m(3,0.0);
          std::vector<double> spin_field(3,0.0);
@@ -243,11 +245,14 @@ namespace environment{
          }
 
 
+
+
          #ifdef MPICF
          MPI_Allreduce(MPI_IN_PLACE, &x_spin_storage_array[0],     num_cells,    MPI_DOUBLE,    MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, &y_spin_storage_array[0],     num_cells,    MPI_DOUBLE,    MPI_SUM, MPI_COMM_WORLD);
          MPI_Allreduce(MPI_IN_PLACE, &z_spin_storage_array[0],     num_cells,    MPI_DOUBLE,    MPI_SUM, MPI_COMM_WORLD);
          #endif
+
 
          //
          for (int i = my_env_start_index; i < my_env_end_index; i++){
@@ -295,11 +300,14 @@ namespace environment{
 
          }
 
-         for (int cell = 0; cell < num_cells; cell++){
+
+         for (int i = my_env_start_index; i < my_env_end_index; i++){
+            int cell = env::none_atomistic_cells[i];
             env::x_mag_array[cell] = 0.0;
             env::y_mag_array[cell] = 0.0;
             env::z_mag_array[cell] = 0.0;
          }
+
 
 
          //calcualtes the new magnetisations from the heun and euler deltas
@@ -324,7 +332,6 @@ namespace environment{
 
          //outputs magnetisation
          if (sim::time %(vout::output_rate*1000) == 0 && vmpi::my_rank == 0 ) 	int a = env::output();
-
 
          return 0;
 
