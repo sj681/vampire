@@ -49,10 +49,10 @@ namespace dipole{
       // Shared variables inside dipole module
       //------------------------------------------------------------------------
       bool initialised=false;
-
+      #ifdef FFT
       fftw_plan MxP,MyP,MzP;
       fftw_plan HxP,HyP,HzP;
-
+      #endif
       int update_time=-1; /// last update time
 
       // solver to be used for dipole method

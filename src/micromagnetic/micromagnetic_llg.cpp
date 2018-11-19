@@ -275,23 +275,23 @@ namespace micromagnetic{
          }
       }
 
-      std::ofstream pfile;
-      pfile.open("cell_config3");
-       if(sim::time>10000){
-      for (int lc = 0; lc < number_of_micromagnetic_cells; lc++){
-
-         int cell = list_of_micromagnetic_cells[lc];
-
-         pfile << cell << '\t' << internal::cell_material_array[cell] << '\t'<< cells::pos_and_mom_array[4*cell+0] << '\t' <<
-                                   cells::pos_and_mom_array[4*cell+1] << '\t' <<
-                                   cells::pos_and_mom_array[4*cell+2] << '\t' <<
-                                   cells::mag_array_x[cell] << '\t' <<
-                                   cells::mag_array_y[cell] << '\t' <<
-                                   cells::mag_array_z[cell] << '\t' << std::endl;
-
-      }
-      std::cin.get();
-   }
+   //    std::ofstream pfile;
+   //    pfile.open("cell_config3");
+   //     if(sim::time>10000){
+   //    for (int lc = 0; lc < number_of_micromagnetic_cells; lc++){
+   //
+   //       int cell = list_of_micromagnetic_cells[lc];
+   //
+   //       pfile << cell << '\t' << internal::cell_material_array[cell] << '\t'<< cells::pos_and_mom_array[4*cell+0] << '\t' <<
+   //                                 cells::pos_and_mom_array[4*cell+1] << '\t' <<
+   //                                 cells::pos_and_mom_array[4*cell+2] << '\t' <<
+   //                                 cells::mag_array_x[cell] << '\t' <<
+   //                                 cells::mag_array_y[cell] << '\t' <<
+   //                                 cells::mag_array_z[cell] << '\t' << std::endl;
+   //
+   //    }
+   //  //  std::cin.get();
+   // }
 
       if (enable_resistance && mm::resistance_layer_2 != mm::resistance_layer_1)  micromagnetic::MR_resistance = mm::calculate_resistance();
 

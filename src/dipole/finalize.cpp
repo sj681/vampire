@@ -22,7 +22,7 @@ namespace dipole{
    // function to finalize dipole solver
    //----------------------------------------------
    void finalize(){
-
+     
       // if fft solver enabled then deallocate memory
       if(dipole::fft) dipole::internal::finalize_fft_solver();
 

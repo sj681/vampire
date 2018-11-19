@@ -15,6 +15,7 @@
 // micromagnetic module headers
 #include "internal.hpp"
 #include "material.hpp"
+#include "../anisotropy/internal.hpp"
 
 namespace micromagnetic{
    namespace internal{
@@ -33,7 +34,8 @@ namespace micromagnetic{
          for (int atom = 0; atom < num_atoms; atom++){
             int cell = cell_array[atom];
             int mat = type_array[atom];
-            ku[cell] = ku[cell] + 1e-23;//mp::material[mat].Ku1_SI; //need to add a function here to access anisotropy module
+            ku[cell] = ku[cell] - anisotropy::internal::mp[mat].ku2;//mp::material[mat].Ku1_SI; //need to add a function here to access anisotropy module
+//            std::cout <<anisotropy::internal::mp[mat].ku2 << std::endl;
          }
 
          #ifdef MPICF

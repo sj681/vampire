@@ -140,7 +140,7 @@ int LLB( std::vector <int> local_cell_array,
          double dt,
          std::vector <double> volume_array){
 
-
+//std::cout << "ENTER"<<std::endl;
 
 	// check calling of routine if error checking is activated
 	if(err::check==true){std::cout << "micromagnetic::LLG_Heun has been called" << std::endl;}
@@ -161,9 +161,10 @@ int LLB( std::vector <int> local_cell_array,
    //initialise the x_array to Mx/Ms
    //spin storage array has to be initalised to 0 for parallel simulations
    for (int cell = 0; cell < num_cells; cell++){
-      x_array[cell] = x_mag_array[cell]/mm::ms[cell];
-      y_array[cell] = y_mag_array[cell]/mm::ms[cell];
-      z_array[cell] = z_mag_array[cell]/mm::ms[cell];
+		 double ims =1.0/mm::ms[cell];
+      x_array[cell] = x_mag_array[cell]*ims;
+      y_array[cell] = y_mag_array[cell]*ims;
+      z_array[cell] = z_mag_array[cell]*ims;
       x_spin_storage_array[cell] = 0.0;
       y_spin_storage_array[cell] = 0.0;
       z_spin_storage_array[cell] = 0.0;
@@ -383,7 +384,8 @@ int LLB( std::vector <int> local_cell_array,
          atoms::z_spin_array[atom] = z_array[cell];
       }
     }
-
+	//	std::cout << enable_resistance << "\t" << std::endl;
+      if (enable_resistance && mm::resistance_layer_2 != mm::resistance_layer_1)  micromagnetic::MR_resistance = mm::calculate_resistance();
 
 	return 0;
 

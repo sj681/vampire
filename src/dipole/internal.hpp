@@ -40,9 +40,10 @@ namespace dipole{
       // Internal shared variables
       //-------------------------------------------------------------------------
       extern bool initialised;
+      #ifdef FFT
       extern fftw_plan MxP,MyP,MzP;
       extern fftw_plan HxP,HyP,HzP;
-
+      #endif
       // enumerated list of different dipole solvers
       enum solver_t{
          macrocell    = 0, // original bare macrocell method (cheap but inaccurate)

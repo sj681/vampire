@@ -113,9 +113,9 @@ namespace micromagnetic{
       double sigma_perp = sqrt(2*kB*temperature*(alpha_perp[cell]-alpha_para[cell])/(mp::dt*ms[cell]*alpha_perp[cell]*alpha_perp[cell]));
 
       //Sum H = H_exch + H_A +H_exch_grains +H_App + H+dip
-      spin_field[0] =ext_field[0] + exchange_field[0] + one_o_chi_perp[cell]*m[0]*m_e[cell]  + dipole::cells_field_array_x[cell] + sigma_para*mtrandom::gaussian() + pinning_field_x[cell];// + sim::track_field_x[cell];
-      spin_field[1] =ext_field[1] + exchange_field[1] + one_o_chi_perp[cell]*m[1]*m_e[cell]  + dipole::cells_field_array_y[cell] + sigma_para*mtrandom::gaussian() + pinning_field_y[cell];// + sim::track_field_y[cell];
-      spin_field[2] =ext_field[2] + exchange_field[2]                                        + dipole::cells_field_array_z[cell] + sigma_para*mtrandom::gaussian() + pinning_field_z[cell];// + sim::track_field_z[cell];
+      spin_field[0] =ext_field[0] + exchange_field[0] + one_o_chi_perp[cell]*m[0]*m_e[cell]  + cells::field_array_x[cell] + sigma_para*mtrandom::gaussian() + pinning_field_x[cell];// + sim::track_field_x[cell];
+      spin_field[1] =ext_field[1] + exchange_field[1] + one_o_chi_perp[cell]*m[1]*m_e[cell]  + cells::field_array_y[cell] + sigma_para*mtrandom::gaussian() + pinning_field_y[cell];// + sim::track_field_y[cell];
+      spin_field[2] =ext_field[2] + exchange_field[2]                                        + cells::field_array_z[cell] + sigma_para*mtrandom::gaussian() + pinning_field_z[cell];// + sim::track_field_z[cell];
 
 
       // if (sim::enable_fmr){

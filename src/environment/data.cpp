@@ -60,6 +60,10 @@ namespace environment{
 
       std::vector < double > ext_field(3,0.0);
 
+      std::vector < double > bias_field_x;
+      std::vector < double > bias_field_y;
+      std::vector < double > bias_field_z;
+
       std::vector < double > dipole_field_x;
       std::vector < double > dipole_field_y;
       std::vector < double > dipole_field_z;
@@ -73,11 +77,11 @@ namespace environment{
       double env_field = 0.0;
 
       std::vector < double > env_field_uv(3,0.0);
-
+      #ifdef FFT
       //FT for magnetisation
       fftw_plan MxP,MyP,MzP;
       fftw_plan HxP,HyP,HzP;
-
+      #endif
       double one_o_chi_para;
       double one_o_chi_perp;
 

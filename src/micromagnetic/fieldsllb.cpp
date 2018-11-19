@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <vector>
 #include "errors.hpp"
+#include "sim.hpp"
 #include "cells.hpp"
 #include "vio.hpp"
 #include "environment.hpp"
@@ -36,6 +37,7 @@ namespace micromagnetic{
                                                std::vector<double>& z_array){
 
 
+
       //array to save the field to for each cell
       std::vector<double> spin_field(3,0.0);
 
@@ -46,6 +48,7 @@ namespace micromagnetic{
       //the temperature is usually used as a reduced temperature or Tc/(Tc-T).
       const double reduced_temperature = temperature/Tc[cell];
       const double Tc_o_Tc_m_T = Tc[cell]/(temperature - Tc[cell]);
+
 
       //sets m_e and alpha temperature dependant parameters
       if (temperature<=Tc[cell]){
@@ -58,9 +61,14 @@ namespace micromagnetic{
          alpha_para[cell] = alpha[cell]*(2.0/3.0)*reduced_temperature;
          alpha_perp[cell] = alpha_para[cell];
       }
+      if (temperature < 0.1){
+        m_e[cell] = 1.0;
+        alpha_para[cell] = 0.001;
+      }
 
       //m and me are usually used squared
       const double m_e_squared = m_e[cell]*m_e[cell];
+
       const double m_squared = m[1]*m[1]+m[2]*m[2]+m[0]*m[0];
 
       //calculates the intercell exchange field (pf) - this is dependent on temperature.
@@ -73,7 +81,7 @@ namespace micromagnetic{
 
       double exchange_field[3]={0.0,0.0,0.0};
       if (num_cells > 1){
-
+        int mat  = cell_material_array[cell];
          //loops over all other cells with interactions to this cell
          const int start = macro_neighbour_list_start_index[cell];
          const int end = macro_neighbour_list_end_index[cell] +1;
@@ -84,6 +92,18 @@ namespace micromagnetic{
             const double mj = sqrt(x_array[cellj]*x_array[cellj] + y_array[cellj]*y_array[cellj] + z_array[cellj]*z_array[cellj]);
             double Ac = A[j]*pow(mj,1.66);
 
+            int matj =cell_material_array[cellj];
+
+            if (mp::material[mat].enable_SAF == true && mp::material[matj].enable_SAF == true){
+
+              if (mat != matj){
+
+                 double Area = cells::macro_cell_size[0]*cells::macro_cell_size[1];
+                Ac = -pow(mj,1.66)*Area*mp::material[mat].SAF[matj]/ms[cell];
+                //if (mm_correction == true) Ac = 2*Ac/cells::macro_cell_size[2];
+
+              }
+           }
       //if (zj < 140 && zi > 150)   std::cout << cell << '\t' << cellj << '\t' << Ac << '\t' << x_array[cellj] - x_array[cell] << "\t" << exchange_field[0] <<"\t" << exchange_field[1] <<"\t" << exchange_field[2] << std::endl;
       //else std::cout << "A" << cell << '\t' << cellj << '\t' << Ac << '\t' << x_array[cellj] - x_array[cell] << "\t" << exchange_field[0] <<"\t" << exchange_field[1] <<"\t" << exchange_field[2] << std::endl;
             exchange_field[0] -= Ac*(x_array[cellj] - x_array[cell]);
@@ -103,13 +123,25 @@ namespace micromagnetic{
       spin_field[2] = pf*m[2] + exchange_field[2] + pinning_field_z[cell] + ext_field[2]                             + cells::field_array_z[cell];// + ext_field[2] + exchange_field[2];// + pinning_field_z[cell];// + cells::field_array_z[cell];
 
       //if environment is enabled add the environment field.
+    //  std::cout << spin_field[0] <<std::endl;
 
+  //  std::cout <<"PF EF M SPIN" << '\t' <<  pf << '\t' << exchange_field[0] << "\t" << m[0] << '\t' << m[1] << '\t' << m[2] << '\t' << spin_field[1] << "\t" << sim::track_field_y[cell] << std::endl;
+    if (spin_field[0] != spin_field[0]) std::cin.get();
+    //if environment is enabled add the environment field.
 
-      if (environment::enabled){
-         spin_field[0] = spin_field[0] + environment::environment_field_x[cell];
-         spin_field[1] = spin_field[1] + environment::environment_field_y[cell];
-         spin_field[2] = spin_field[2] + environment::environment_field_z[cell];
-      }
+    if (environment::enabled){
+    // std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
+       spin_field[0] = spin_field[0] + environment::environment_field_x[cell];
+       spin_field[1] = spin_field[1] + environment::environment_field_y[cell];
+       spin_field[2] = spin_field[2] + environment::environment_field_z[cell];
+    }
+
+     if (sim::track_field_x.size() != 0 ){
+       spin_field[0] = spin_field[0] + sim::track_field_x[cell];
+       spin_field[1] = spin_field[1] + sim::track_field_y[cell];
+       spin_field[2] = spin_field[2] + sim::track_field_z[cell];
+    //   std::cout << pinning_field_y[cell] << '\t' << sim::track_field_x[cell] << '\t' << sim::track_field_y[cell] << "\t" <<sim::track_field_z[cell] <<std::endl;
+     }
 
       //std::cout << environment::environment_field_x[cell] << '\t' << environment::environment_field_x[cell]  << '\t' << environment::environment_field_x[cell] << std::endl;
       return spin_field;

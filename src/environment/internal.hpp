@@ -52,6 +52,9 @@ namespace environment{
       extern std::vector < double > dipole_field_y;
       extern std::vector < double > dipole_field_z;
 
+      extern std::vector < double > bias_field_x;
+      extern std::vector < double > bias_field_y;
+      extern std::vector < double > bias_field_z;
       //3d vector to store the shift in atomistic position from 0,0,0 with respect to the environment module
       extern std::vector < double > shift;
 
@@ -84,12 +87,12 @@ namespace environment{
       extern std::vector < double > x_mag_array;
       extern std::vector < double > y_mag_array;
       extern std::vector < double > z_mag_array;
-
+      #ifdef FFT
       //FT for magnetisation
       extern fftw_plan MxP,MyP,MzP;
       // performs the backward transform to give the dipole field, Hx, Hy, Hz
       extern fftw_plan HxP,HyP,HzP;
-
+      #endif
 //      extern fft_cell_id_array;
 
       extern std::vector<double> cell_coords_array_x; /// arrays to store cells positions
@@ -169,6 +172,7 @@ namespace environment{
       int output();
 
       bool in_shield(double x, double y, double z);
+      int bias_shields();
 
       std::vector<double> calculate_llb_fields(std::vector <double>& m,
                                                double temperature,

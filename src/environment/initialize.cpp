@@ -112,6 +112,11 @@ namespace environment{
          env::y_mag_array.resize(env::num_cells,0.0);
          env::z_mag_array.resize(env::num_cells,0.0);
 
+         env::bias_field_x.resize(env::num_cells,0.0);
+         env::bias_field_y.resize(env::num_cells,0.0);
+         env::bias_field_z.resize(env::num_cells,0.0);
+
+
          env::cell_coords_array_x.resize(env::num_cells,0.0);
          env::cell_coords_array_y.resize(env::num_cells,0.0);
          env::cell_coords_array_z.resize(env::num_cells,0.0);
@@ -312,26 +317,31 @@ namespace environment{
             }
          }
 
-         std::ofstream mfile;
-         mfile.open("m3.txt");
 
-         for (int cell = 0; cell < cells::num_cells; cell++)
-         mfile<< cells::pos_and_mom_array[4*cell+0] + env::shift[0]<< '\t' << cells::pos_and_mom_array[4*cell+1]  +env::shift[1]<< '\t' << cells::pos_and_mom_array[4*cell+2]+env::shift[2] << '\t' << cells::mag_array_x[cell] <<'\t' << cells::mag_array_y[cell] <<'\t' << cells::mag_array_z[cell] <<std::endl;
+         int b = env::bias_shields();
 
-
-         //initalise the demag fields
-         int a = env::initialise_demag_fields();
-
-         std::ofstream pfile;
-         pfile.open("m2.txt");
-
-         for (int cell = 0; cell < env::num_cells; cell++){
-            pfile << cell << "\t" << env::cell_coords_array_x[cell]<< "\t" << env::cell_coords_array_y[cell]<< "\t" << env::cell_coords_array_z[cell]  <<  "\t" <<  env::x_mag_array[cell] << '\t' << env::y_mag_array[cell] << '\t' << env::z_mag_array[cell] <<std::endl;
-          }
+         // std::ofstream mfile;
+         // mfile.open("m3.txt");
+         //
+         // for (int cell = 0; cell < cells::num_cells; cell++)
+         // mfile<< cells::pos_and_mom_array[4*cell+0] + env::shift[0]<< '\t' << cells::pos_and_mom_array[4*cell+1]  +env::shift[1]<< '\t' << cells::pos_and_mom_array[4*cell+2]+env::shift[2] << '\t' << cells::mag_array_x[cell] <<'\t' << cells::mag_array_y[cell] <<'\t' << cells::mag_array_z[cell] <<std::endl;
+         //
+         //
+          //initalise the demag fields
+          int a = env::initialise_demag_fields();
+         //
+         // std::ofstream pfile;
+         // pfile.open("m2.txt");
+         //
+         // for (int cell = 0; cell < env::num_cells; cell++){
+         //    pfile << cell << "\t" << env::cell_coords_array_x[cell]<< "\t" << env::cell_coords_array_y[cell]<< "\t" << env::cell_coords_array_z[cell]  <<  "\t" <<  env::x_mag_array[cell] << '\t' << env::y_mag_array[cell] << '\t' << env::z_mag_array[cell] <<std::endl;
+         //  }
+//          std::cin.get();
 
          return;
 
       }
+
 
    } // end of environment namespace
 

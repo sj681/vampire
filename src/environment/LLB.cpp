@@ -292,7 +292,8 @@ namespace environment{
 
          }
 
-         for (int cell = 0; cell < num_cells; cell++){
+         for (int i = my_env_start_index; i < my_env_end_index; i++){
+            int cell = env::none_atomistic_cells[i];
             env::x_mag_array[cell] = 0.0;
             env::y_mag_array[cell] = 0.0;
             env::z_mag_array[cell] = 0.0;

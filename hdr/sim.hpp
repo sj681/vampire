@@ -194,13 +194,29 @@ namespace sim{
    // Monte Carlo statistics counters
    extern double mc_statistics_moves;
    extern double mc_statistics_reject;
+
+	 //track parameters
 	 extern double track_Ms;
+	 extern double track_bit_width;
+	 extern double track_bit_depth;
+	 extern double track_bit_size;
+
+	 extern double track_bit_gap;
+	 extern double track_track_gap;
 
 	 extern double cross_track_velocity;
 	 extern double down_track_velocity;
 
+	 extern int track_num_bits_per_track;
+	 extern int track_num_tracks;
+
+	 // distance of tracks from read head
+	 extern double track_fly_height; // Angstroms
+
 	 extern double initial_down_track_position;
 	 extern double initial_cross_track_position;
+
+	 extern bool track_ms_file;
 
 }
 
