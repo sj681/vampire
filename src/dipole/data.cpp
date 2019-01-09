@@ -44,6 +44,7 @@ namespace dipole{
 
    std::vector <int> dipole_cells_num_atoms_in_cell;
 
+
    double cutoff = 2.0;  /// cutoff distance between cells over which bare macro cell model can be applied
                          /// N.B.: after 12 cells inter-intra method is equivalent to bare macrocell method.
                          /// Although, 2 cells is enough because there are other error sources limiting the accuracy.
@@ -82,6 +83,33 @@ namespace dipole{
 
       std::vector<double> cells_pos_and_mom_array;
       std::vector < int > proc_cell_index_array1D;
+
+      std::vector <int> num_cells_level;
+      std::vector <int> num_atoms_magnetic_level;
+      std::vector <int> num_local_cells_level;
+
+      std::vector < std::vector < double> > cell_position_array_level;
+
+
+      std::vector < std::vector < double> > pos_and_mom_array_level;
+
+      std::vector < std::vector < double> > mag_array_x_level;
+      std::vector < std::vector < double> > mag_array_y_level;
+      std::vector < std::vector < double> > mag_array_z_level;
+
+      std::vector < std::vector < double> > field_array_x_level;
+      std::vector < std::vector < double> > field_array_y_level;
+      std::vector < std::vector < double> > field_array_z_level;
+
+      std::vector < std::vector < double> > num_atoms_in_cell_level;
+      std::vector < std::vector < double> > num_atoms_in_cell_global_level;
+      std::vector < std::vector < double> > volume_array_level;
+
+      std::vector < std::vector < double> > total_moment_array_level;
+      std::vector < std::vector < int > > atom_cell_id_array_level;
+      std::vector < std::vector < int > > cell_id_array_level;
+
+      std::vector < std::vector < int > > local_cell_array_level;
 
       //------------------------------------------------------------------------
       // Shared functions inside dipole module

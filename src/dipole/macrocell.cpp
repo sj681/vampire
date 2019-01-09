@@ -53,6 +53,8 @@ namespace dipole{
                                        std::vector<double>& atom_coords_z,
                                        int num_atoms){
 
+
+
          //------------------------------------------------------
          // Collate atom coordinates for local cells
          //------------------------------------------------------

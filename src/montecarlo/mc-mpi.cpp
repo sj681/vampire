@@ -13,6 +13,7 @@
 // Standard Libraries
 #include <cmath>
 #include <vector>
+#include <iostream>
 
 // Vampire Header files
 #include "errors.hpp"

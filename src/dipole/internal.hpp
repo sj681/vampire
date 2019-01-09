@@ -75,6 +75,33 @@ namespace dipole{
       extern std::vector<double> cells_pos_and_mom_array;
       extern std::vector < int > proc_cell_index_array1D;
 
+      extern std::vector <int> num_cells_level;
+      extern std::vector <int> num_atoms_magnetic_level;
+      extern std::vector <int> num_local_cells_level;
+
+      extern std::vector < std::vector < double> > cell_position_array_level;
+
+
+      extern std::vector < std::vector < double> > pos_and_mom_array_level;
+
+      extern std::vector < std::vector < double> > mag_array_x_level;
+      extern std::vector < std::vector < double> > mag_array_y_level;
+      extern std::vector < std::vector < double> > mag_array_z_level;
+
+      extern std::vector < std::vector < double> > field_array_x_level;
+      extern std::vector < std::vector < double> > field_array_y_level;
+      extern std::vector < std::vector < double> > field_array_z_level;
+
+      extern std::vector < std::vector < double> > num_atoms_in_cell_level;
+      extern std::vector < std::vector < double> > num_atoms_in_cell_global_level;
+      extern std::vector < std::vector < double> > volume_array_level;
+
+      extern std::vector < std::vector < double> > total_moment_array_level;
+      extern std::vector < std::vector < int > > atom_cell_id_array_level;
+      extern std::vector < std::vector < int > > cell_id_array_level;
+
+      extern std::vector < std::vector < int > > local_cell_array_level;
+
       //-------------------------------------------------------------------------
       // Internal function declarations
       //-------------------------------------------------------------------------
@@ -102,6 +129,23 @@ namespace dipole{
                                     std::vector<double>& atom_coords_y,
                                     std::vector<double>& atom_coords_z,
                                     int num_atoms);
+
+      void hierarchical_tensor();
+
+      void calcualte_cells_levels(const double system_dimensions_x,
+                      const double system_dimensions_y,
+                      const double system_dimensions_z,
+                      const double unit_cell_size_x,
+                      const double unit_cell_size_y,
+                      const double unit_cell_size_z,
+                      const std::vector<double>& atom_coords_x,
+                      const std::vector<double>& atom_coords_y,
+                      const std::vector<double>& atom_coords_z,
+                      const std::vector<int>& atom_type_array,
+                      const std::vector<int>& atom_cell_id_array,
+                      const int num_total_atoms_for_dipole,
+                      const int num_atoms
+      );
 
       void compute_inter_tensor(const double cells_macro_cell_size,
                                 const int i,

@@ -69,6 +69,8 @@ namespace dipole{
       // allocate memory for rij matrix
       dipole::internal::allocate_memory(cells_num_local_cells, cells_num_cells);
 
+      dipole::internal::calcualte_cells_levels(cs::system_dimensions[0], cs::system_dimensions[1], cs::system_dimensions[2], cs::unit_cell.dimensions[0], cs::unit_cell.dimensions[1], cs::unit_cell.dimensions[2], atom_coords_x, atom_coords_y, atom_coords_z, dipole::internal::atom_type_array, dipole::internal::atom_cell_id_array, create::num_total_atoms_non_filler, num_atoms);
+
       //-------------------------------------------------------------------------------------
       // Set const for functions
       //-------------------------------------------------------------------------------------
@@ -119,6 +121,7 @@ namespace dipole{
             break;
 
       }
+
 
       // Set initialised flag
       dipole::internal::initialised=true;
