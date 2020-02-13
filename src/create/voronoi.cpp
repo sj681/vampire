@@ -48,7 +48,7 @@ namespace create_voronoi{
 	bool rounded=false;
 	double area_cutoff=0.8;
 	double voronoi_sd=0.15;			/// Standard Deviation of voronoi grains
-
+	bool include_boundary_grains_real = false;
 }
 
 namespace cs{
@@ -127,7 +127,7 @@ int voronoi_film(std::vector<cs::catom_t> & catom_array){
 
 
 		std::random_device rd;
-      std::mt19937 gen(rd());
+      std::mt19937 gen(12345);
 		//variance = exp ( 2.0 * mu + sigma * sigma ) * ( exp ( sigma * sigma ) - 1.0 );
 		//mean = exp ( mu + 0.5 * sigma * sigma );
 		std::lognormal_distribution<> d(log(grain_cell_size_x), grain_sd );

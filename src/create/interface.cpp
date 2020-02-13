@@ -184,6 +184,12 @@ namespace create{
                 return true;
         }
         else
+        test="voronoi-include-boundaries";
+        if(word==test){
+            create_voronoi::include_boundary_grains_real=true;
+            return true;
+        }
+        else
         test="voronoi-rounded-grains";
         if(word==test){
             create_voronoi::rounded=true;
