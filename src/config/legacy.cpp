@@ -374,7 +374,7 @@ void legacy_cells()
 
    // start timer
    timer.start();
-
+    cells::mag();
    // Output masterfile header on root process
    if (vmpi::my_rank == 0)
    {
@@ -406,7 +406,7 @@ void legacy_cells()
       // Root process now outputs the cell magnetisations
       for (int cell = 0; cell < cells::num_cells; cell++){
          if (cells::num_atoms_in_cell_global[cell] > 0){
-            cfg_file_ofstr << cells::mag_array_x[cell] << "\t" << cells::mag_array_y[cell] << "\t" << cells::mag_array_z[cell] << "\t";
+            cfg_file_ofstr << cells::mag_array_x[cell]/cells::pos_and_mom_array[4*cell+3] << "\t" << cells::mag_array_y[cell]/cells::pos_and_mom_array[4*cell+3] << "\t" << cells::mag_array_z[cell]/cells::pos_and_mom_array[4*cell+3] << "\t";
             if(dipole::activated) cfg_file_ofstr << dipole::cells_field_array_x[cell] << "\t" << dipole::cells_field_array_y[cell] << "\t" << dipole::cells_field_array_z[cell] << "\n";
             else cfg_file_ofstr << "\n";
          }

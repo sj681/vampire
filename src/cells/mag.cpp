@@ -61,6 +61,7 @@ namespace cells{
                cells::mag_array_x[cell] += atoms::x_spin_array[i]*mus;
                cells::mag_array_y[cell] += atoms::y_spin_array[i]*mus;
                cells::mag_array_z[cell] += atoms::z_spin_array[i]*mus;
+            //   std::cout << cell << '\t' << 
             }
          //}
       }

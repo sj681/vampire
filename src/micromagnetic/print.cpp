@@ -51,21 +51,21 @@ void output_system_parameters(std::vector<double>& pos_and_mom_array,
             << x_mag_array[cell]/pos_and_mom_array[4*cell+3] << "\t"
             << y_mag_array[cell]/pos_and_mom_array[4*cell+3] << "\t"
             << z_mag_array[cell]/pos_and_mom_array[4*cell+3] << "\t"
-            << magn/pos_and_mom_array[4*cell+3] << "\t"
-            << alpha[cell] << "\t"
-            << one_o_chi_perp[cell] << "\t"
-            << one_o_chi_para[cell] << "\t"
-            << gamma[cell] << "\t"
-            << ku[cell] << "\t"
-            << ku_x[cell] << "\t"
-            << ku_y[cell] << "\t"
-            << ku_z[cell] << "\t"
-            << ms[cell] << "\t"
-            << T[cell] << "\t"
-            << Tc[cell] << "\t"
-            << m_e[cell] << "\t"
-            << alpha_para[cell] << "\t"
-            << alpha_perp[cell] << std::endl;
+            << magn/pos_and_mom_array[4*cell+3] << "\t" << std::endl;
+            // << alpha[cell] << "\t"
+            // << one_o_chi_perp[cell] << "\t"
+            // << one_o_chi_para[cell] << "\t"
+            // << gamma[cell] << "\t"
+            // << ku[cell] << "\t"
+            // << ku_x[cell] << "\t"
+            // << ku_y[cell] << "\t"
+            // << ku_z[cell] << "\t"
+            // << ms[cell] << "\t"
+            // << T[cell] << "\t"
+            // << Tc[cell] << "\t"
+            // << m_e[cell] << "\t"
+            // << alpha_para[cell] << "\t"
+            // << alpha_perp[cell] << std::endl;
    }
 
    ofile.close();

@@ -176,12 +176,16 @@ int LLB( std::vector <int>& local_cell_array,
    mm::calculate_chi_perp(number_of_micromagnetic_cells, list_of_micromagnetic_cells, mm::one_o_chi_perp, mm::T, mm::Tc);
 
    //initialise the x_array to Mx/Ms
-   for (int cell = 0; cell < num_cells; cell++){
-		double ims =1.0/mm::ms[cell];
+	 for (int lc = 0; lc < number_of_micromagnetic_cells; lc++){
+      int cell = list_of_micromagnetic_cells[lc];
+		  double ims =1.0/mm::ms[cell];
       x_array[cell] = x_mag_array[cell]*ims;
       y_array[cell] = y_mag_array[cell]*ims;
       z_array[cell] = z_mag_array[cell]*ims;
+	// std::cout << mm::ms[cell] << '\t' << x_mag_array[cell] << "\t" << x_array[cell] << std::endl;
    }
+
+//std::cin.get();
 
    //save this new m as the initial value, so it can be saved and used in the final equation.
    for (int lc = 0; lc < number_of_micromagnetic_cells; lc++){
@@ -256,7 +260,7 @@ int LLB( std::vector <int>& local_cell_array,
       x_euler_array[cell] = xyz[0];
       y_euler_array[cell] = xyz[1];
       z_euler_array[cell] = xyz[2];
-
+	//	std::cout << m[0] << '\t' << m[1] << '\t' << m[2] << "\t" << sigma_para << '\t' << sigma_perp << "\t" << mm::alpha_perp[cell] << '\t' << mm::alpha_para[cell] << "\t" << mm::ms[cell] << dt << "\t" << temperature << "\t" << kB << std::endl;
    }
 
 
@@ -292,6 +296,8 @@ int LLB( std::vector <int>& local_cell_array,
    	m[0] = x_spin_storage_array[cell];
    	m[1] = y_spin_storage_array[cell];
    	m[2] = z_spin_storage_array[cell];
+
+
 
    	spin_field = mm::calculate_llb_fields(m, temperature, num_cells, cell, x_spin_storage_array,y_spin_storage_array,z_spin_storage_array);
 
@@ -332,7 +338,7 @@ int LLB( std::vector <int>& local_cell_array,
    	z_heun_array[cell] = xyz[2];
 
    }
-
+//std::cin.get();
 	// For parallel version set arrays to zero to allow parallel reduction to work
 	#ifdef MPICF
 		for(int cell=0; cell< data_size; cell++){
@@ -358,8 +364,9 @@ int LLB( std::vector <int>& local_cell_array,
    	cells::mag_array_x[cell] = x_array[cell]*mm::ms[cell];
    	cells::mag_array_y[cell] = y_array[cell]*mm::ms[cell];
    	cells::mag_array_z[cell] = z_array[cell]*mm::ms[cell];
+	//	std::cout << x_array[cell] << '\t' << mm::ms[cell] << "\t" << x_euler_array[cell] << '\t' << x_heun_array[cell] << std::endl;
    }
-
+//	 std::cin.get();
 	// Reduce unit vectors and moments to all processors
    #ifdef MPICF
       MPI_Allreduce(MPI_IN_PLACE, &cells::mag_array_x[0], data_size, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
